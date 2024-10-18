@@ -58,8 +58,10 @@ struct RegisterView: View {
                 .background(.customRed)
                 .clipShape(.buttonBorder)
                 .padding()
-                
-                Text("Already have an account?").padding().underline()
+                                
+                NavigationLink(destination: LoginView(), label: {
+                    Text("Already have an account?").foregroundStyle(.black).padding().underline()
+                })
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
