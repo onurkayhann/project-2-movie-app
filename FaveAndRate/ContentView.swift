@@ -9,7 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-       LoginView()
+        //Prepare NavigationStack to later add if it's LoginView or RegisterView that user navigates to
+        NavigationStack {
+            
+            LoginView()
+        }
+
     }
 }
 
