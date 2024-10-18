@@ -1,25 +1,34 @@
 //
-//  LoginView.swift
+//  RegisterView.swift
 //  FaveAndRate
 //
-//  Created by Onur Kayhan on 2024-10-18.
+//  Created by Hampus Andersson on 2024-10-18.
 //
 
 import SwiftUI
 
-struct LoginView: View {
+struct RegisterView: View {
+    
     @State var emailInput: String = ""
+    @State var confirmEmailInput: String = ""
     @State var passwordInput: String = ""
+    @State var confirmPasswordInput: String = ""
     
     var body: some View {
         VStack {
             
             //App logo
             Image("fave-and-rate-logo")
-            Text("Login").font(.largeTitle).bold()
+            Text("Register").font(.largeTitle).bold()
             
             VStack {
                 TextField("Email", text: $emailInput)
+                    .padding()
+                    .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.never)
+                    .padding(.horizontal, 30)
+                
+                TextField("Confirm Email", text: $confirmEmailInput)
                     .padding()
                     .textFieldStyle(.roundedBorder)
                     .textInputAutocapitalization(.never)
@@ -31,8 +40,14 @@ struct LoginView: View {
                     .textInputAutocapitalization(.never)
                     .padding(.horizontal, 30)
                 
+                SecureField("Confirm Password", text: $confirmPasswordInput)
+                    .padding()
+                    .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.never)
+                    .padding(.horizontal, 30)
                 
-                Button("Login", action: {
+                
+                Button("Register", action: {
                     // Logga in
                 })
                 .bold()
@@ -44,8 +59,7 @@ struct LoginView: View {
                 .clipShape(.buttonBorder)
                 .padding()
                 
-                Text("Don't have an account? Register").padding().underline()
-                
+                Text("Already have an account?").padding().underline()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -53,5 +67,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    RegisterView()
 }
