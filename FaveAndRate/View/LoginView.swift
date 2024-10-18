@@ -44,6 +44,7 @@ struct LoginView: View {
                 .clipShape(.buttonBorder)
                 .padding()
                 
+                Text("Don't have an account? Register").padding().underline()
                 
             }
         }
