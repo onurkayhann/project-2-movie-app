@@ -14,9 +14,6 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("Hello, world!")
-            // first commit
-            //second commit
-            //third commit
         }
         .padding()
     }
