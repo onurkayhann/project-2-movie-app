@@ -28,9 +28,12 @@ struct FaveAndRateApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
+    @StateObject var dbConnection = DbConnection()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(dbConnection)
         }
     }
 }
