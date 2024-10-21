@@ -16,6 +16,11 @@ class DbConnection: ObservableObject {
     
     let COLLECTION_USER_DATA = "user_data"
     
+    @Published var currentUser: User?
+    @Published var currentUserData: UserData?
+    
+    var userDataListener: ListenerRegistration?
+    
     func registerUser(email: String, password: String, name: String) {
         
         auth.createUser(withEmail: email, password: password) { authResult, error in
@@ -39,7 +44,62 @@ class DbConnection: ObservableObject {
         }
         
         
-    } 
+    }
+    
+    func loginUser(email: String, password: String) {
+        
+        auth.signIn(withEmail: email, password: password)
+        
+    }
+    
+    init() {
+        
+        let _ = auth.addStateDidChangeListener { auth, user in
+        
+            if let user = user {
+                self.currentUser = user
+                self.startUserDataListener()
+                //Add for self.watchlistListener here
+                
+            } else {
+                self.currentUser = nil
+                self.userDataListener?.remove()
+                self.userDataListener = nil
+                self.currentUser = nil
+                //Add for self.watchlist here
+                
+            }
+            
+        }
+        
+    }
+    
+    //Add listener for example watchlist
+    
+    func startUserDataListener() {
+        
+        guard let currentUser = currentUser else { return }
+        
+        userDataListener = db.collection(COLLECTION_USER_DATA).document(currentUser.uid).addSnapshotListener { snapshot, error in
+            
+            if let error = error {
+                print("Error listening to userData! \(error.localizedDescription)")
+            } else {
+                guard let snapshot = snapshot else { return }
+                
+                do {
+                    
+                    self.currentUserData = try snapshot.data(as: UserData.self)
+                    
+                } catch _ {
+                    
+                    print("Omvandlingsfel! Kunde inte omvandla användarens data")
+                }
+                
+            }
+            
+        }
+    }
     
     
 }
