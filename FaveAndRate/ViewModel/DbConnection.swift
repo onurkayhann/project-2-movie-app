@@ -12,5 +12,7 @@ class DbConnection: ObservableObject {
     
     var db = Firestore.firestore()
     
+    let COLLECTION_USER_DATA = "user_data"
+    
     
 }
