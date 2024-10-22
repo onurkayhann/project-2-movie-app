@@ -58,7 +58,7 @@ struct RegisterView: View {
                     }
                     
                     guard passwordInput == confirmPasswordInput else {
-                        print("Password dont match")
+                        print("Password don't match")
                         return
                     }
                         
@@ -83,5 +83,5 @@ struct RegisterView: View {
 }
 
 #Preview {
-    RegisterView()
+    RegisterView().environmentObject(DbConnection())
 }
