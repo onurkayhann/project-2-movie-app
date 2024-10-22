@@ -11,6 +11,8 @@ struct LoginView: View {
     @State var emailInput: String = ""
     @State var passwordInput: String = ""
     
+    @EnvironmentObject var db: DbConnection
+    
     var body: some View {
         VStack {
             
@@ -33,7 +35,11 @@ struct LoginView: View {
                 
                 
                 Button("Login", action: {
-                    // Logga in
+                    guard emailInput.contains("@") else {
+                        print("Invalid email type: @ is missing")
+                        return
+                    }
+                    db.loginUser(email: emailInput, password: passwordInput)
                 })
                 .bold()
                 .padding()
@@ -56,5 +62,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginView().environmentObject(DbConnection())
 }
