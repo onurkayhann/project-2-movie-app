@@ -51,7 +51,7 @@ struct RegisterView: View {
                 
                 
                 Button("Register", action: {
-
+                    db.registerUser(email: emailInput, password: passwordInput, name: nameInput)
                 })
                 .bold()
                 .padding()
