@@ -8,16 +8,27 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var db: DbConnection
+    
     var body: some View {
-        //Prepare NavigationStack to later add if it's LoginView or RegisterView that user navigates to
-        NavigationStack {
-            
-            LoginView()
+        
+        if db.currentUser != nil {
+            NavigationStack {
+                //Inloggad vy
+                HomeView()
+            }
+        } else {
+            //Utloggad vy
+            NavigationStack {
+                LoginView()
+            }
         }
+        
 
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView().environmentObject(DbConnection())
 }
