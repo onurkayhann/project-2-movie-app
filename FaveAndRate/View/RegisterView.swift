@@ -9,10 +9,13 @@ import SwiftUI
 
 struct RegisterView: View {
     
-    @State var emailInput: String = ""
-    @State var confirmEmailInput: String = ""
-    @State var passwordInput: String = ""
-    @State var confirmPasswordInput: String = ""
+    @EnvironmentObject var db: DbConnection
+    
+    
+    @State var nameInput = ""
+    @State var emailInput = ""
+    @State var passwordInput = ""
+    @State var confirmPasswordInput = ""
     
     var body: some View {
         VStack {
@@ -22,13 +25,13 @@ struct RegisterView: View {
             Text("Register").font(.largeTitle).bold()
             
             VStack {
-                TextField("Email", text: $emailInput)
+                TextField("Name", text: $nameInput)
                     .padding()
                     .textFieldStyle(.roundedBorder)
                     .textInputAutocapitalization(.never)
                     .padding(.horizontal, 30)
                 
-                TextField("Confirm Email", text: $confirmEmailInput)
+                TextField("Email", text: $emailInput)
                     .padding()
                     .textFieldStyle(.roundedBorder)
                     .textInputAutocapitalization(.never)
@@ -48,7 +51,18 @@ struct RegisterView: View {
                 
                 
                 Button("Register", action: {
-                    // Logga in
+                    
+                    guard emailInput.contains("@") else {
+                        print("Invalid email type: @ is missing")
+                        return
+                    }
+                    
+                    guard passwordInput == confirmPasswordInput else {
+                        print("Password dont match")
+                        return
+                    }
+                        
+                    db.registerUser(email: emailInput, password: passwordInput, name: nameInput)
                 })
                 .bold()
                 .padding()
