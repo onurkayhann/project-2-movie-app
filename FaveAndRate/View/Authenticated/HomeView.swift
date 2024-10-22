@@ -12,9 +12,11 @@ struct HomeView: View {
     
     var body: some View {
         VStack {
+            //Rendering users name, adding title design such as font
             Text("Welcome, \(db.currentUserData?.name ?? "No user found")!")
             
             Button("Logout", action: {
+                //Signing out
                 db.signOut()
             })
             .bold()
@@ -28,6 +30,10 @@ struct HomeView: View {
             
         }
         .padding()
+        
+        //Adding API here, such as movies in horizontal scrollview
+        //Add navigation to MovieView
+        //Add bottom tab view, such as home and settings
     }
 }
 

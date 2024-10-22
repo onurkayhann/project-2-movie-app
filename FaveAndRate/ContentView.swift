@@ -13,6 +13,7 @@ struct ContentView: View {
     
     var body: some View {
         
+        //Checks if user navigates to HomeView or LoginView
         if db.currentUser != nil {
             NavigationStack {
                 //Inloggad vy

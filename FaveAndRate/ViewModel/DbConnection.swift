@@ -21,6 +21,7 @@ class DbConnection: ObservableObject {
     
     var userDataListener: ListenerRegistration?
     
+    //Function to register user
     func registerUser(email: String, password: String, name: String) {
         
         auth.createUser(withEmail: email, password: password) { authResult, error in
@@ -46,12 +47,14 @@ class DbConnection: ObservableObject {
         
     }
     
+    //Function to login user
     func loginUser(email: String, password: String) {
         
         auth.signIn(withEmail: email, password: password)
         
     }
     
+    //Initialize listener for if the state changes
     init() {
         
         let _ = auth.addStateDidChangeListener { auth, user in
@@ -74,6 +77,7 @@ class DbConnection: ObservableObject {
         
     }
     
+    //Signout function
     func signOut() {
         do {
             try auth.signOut()
@@ -86,6 +90,7 @@ class DbConnection: ObservableObject {
     
     //Add listener for example watchlist
     
+    //Function that listens on userdata
     func startUserDataListener() {
         
         guard let currentUser = currentUser else { return }

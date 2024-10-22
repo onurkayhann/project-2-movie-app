@@ -52,16 +52,18 @@ struct RegisterView: View {
                 
                 Button("Register", action: {
                     
+                    //Checking if @ is in the users input
                     guard emailInput.contains("@") else {
                         print("Invalid email type: @ is missing")
                         return
                     }
-                    
+                    //Checks if passwordInput and confirmPasswordInput is the same
                     guard passwordInput == confirmPasswordInput else {
                         print("Password don't match")
                         return
                     }
-                        
+                    
+                    //Register function
                     db.registerUser(email: emailInput, password: passwordInput, name: nameInput)
                 })
                 .bold()
@@ -72,7 +74,8 @@ struct RegisterView: View {
                 .background(.customRed)
                 .clipShape(.buttonBorder)
                 .padding()
-                                
+                
+                //Navigates back to LoginView
                 NavigationLink(destination: LoginView(), label: {
                     Text("Already have an account?").foregroundStyle(.black).padding().underline()
                 })
