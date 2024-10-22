@@ -74,6 +74,16 @@ class DbConnection: ObservableObject {
         
     }
     
+    func signOut() {
+        do {
+            try auth.signOut()
+            currentUser = nil
+            currentUserData = nil
+        } catch _ {
+            print("Error signing out")
+        }
+    }
+    
     //Add listener for example watchlist
     
     func startUserDataListener() {

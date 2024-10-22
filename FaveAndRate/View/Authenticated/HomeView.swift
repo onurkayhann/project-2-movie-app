@@ -9,16 +9,28 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var db: DbConnection
-    var user: UserData?
     
     var body: some View {
         VStack {
-            Text("Welcome, \(user?.name ?? "No user found")!")
+            Text("Welcome, \(db.currentUserData?.name ?? "No user found")!")
+            
+            Button("Logout", action: {
+                db.signOut()
+            })
+            .bold()
+            .padding()
+            .padding(.horizontal, 25)
+            .padding(.vertical, 5)
+            .foregroundStyle(.white)
+            .background(.customRed)
+            .clipShape(.buttonBorder)
+            .padding()
+            
         }
         .padding()
     }
 }
 
 #Preview {
-    HomeView(user: UserData(name: "John Doe", watchlist: []))
+    HomeView().environmentObject(DbConnection())
 }
