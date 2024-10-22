@@ -51,6 +51,17 @@ struct RegisterView: View {
                 
                 
                 Button("Register", action: {
+                    
+                    guard emailInput.contains("@") else {
+                        print("Invalid email type: @ is missing")
+                        return
+                    }
+                    
+                    guard passwordInput == confirmPasswordInput else {
+                        print("Password dont match")
+                        return
+                    }
+                        
                     db.registerUser(email: emailInput, password: passwordInput, name: nameInput)
                 })
                 .bold()
