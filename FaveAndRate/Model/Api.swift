@@ -15,7 +15,7 @@ class Api {
         
         var request = URLRequest(url: url)
         
-        request.httpMethod = ("GET")
+        request.httpMethod = "GET"
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
