@@ -9,11 +9,25 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var db: DbConnection
+    @EnvironmentObject var movieManager: MovieManager
     
     var body: some View {
         VStack {
             //Rendering users name, adding title design such as font
             Text("Welcome, \(db.currentUserData?.name ?? "No user found")!")
+
+                
+                ForEach(movieManager.movies) { movieDescription in
+                    
+                    VStack {
+                        
+                        if let title = movieDescription.title, let year = movieDescription.year {
+                            Text("\(title) (\(year))")
+                                .font(.headline)
+                        }
+                    }
+                }
+            
             
             Button("Logout", action: {
                 //Signing out
@@ -30,6 +44,15 @@ struct HomeView: View {
             
         }
         .padding()
+        .onAppear {
+                    Task {
+                        do {
+                            try await movieManager.getMovies()
+                        } catch {
+                            print("Error fetching movies: \(error)")
+                        }
+                    }
+                }
         
         //Adding API here, such as movies in horizontal scrollview
         //Add navigation to MovieView
@@ -38,5 +61,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView().environmentObject(DbConnection())
+    HomeView().environmentObject(DbConnection()).environmentObject(MovieManager())
 }
