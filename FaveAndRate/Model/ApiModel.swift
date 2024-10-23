@@ -44,6 +44,7 @@ struct Moviedescription: Codable, Identifiable {
             case id = "#IMDB_ID"
             case title = "#TITLE"
             case year = "#YEAR"
+            // add more movie description later
             
         }
     }
