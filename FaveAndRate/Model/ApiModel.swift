@@ -23,29 +23,29 @@ struct AuthResponse: Decodable {
     var message: String
 }
 
-struct MovieEntry: Codable {
-    
-    var description: [Moviedescription]
-    
-    enum CodingKeys: String, CodingKey {
-        case description
-    }
-    
+/*
+struct MoviesWrapper: Decodable {
+    var description: [MovieEntry]
+}
+ */
+
+struct MovieResponse: Codable {
+    var description: [Movie]
 }
     
-struct Moviedescription: Codable, Identifiable {
+struct Movie: Codable, Identifiable {
         
         var id: String?
         var title: String?
-        var year: String?
+        var year: Int?
         
         enum CodingKeys: String, CodingKey {
-            
             case id = "#IMDB_ID"
             case title = "#TITLE"
             case year = "#YEAR"
             // add more movie description later
-            
         }
     }
+
+//Make a new struct to use for user adding movies/series to FireStore
     

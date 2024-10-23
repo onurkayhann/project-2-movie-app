@@ -11,7 +11,7 @@ class Api {
     
     func get<R: Decodable>(url: String) async throws -> R {
         
-        guard let url = URL(string: url) else { throw APIErros.invalidURL }
+        guard let url = URL(string: url) else { throw APIErrors.invalidURL }
         
         var request = URLRequest(url: url)
         
@@ -19,7 +19,7 @@ class Api {
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode >= 200 && httpResponse.statusCode < 205 else { throw APIErros.invalidResponse }
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode >= 200 && httpResponse.statusCode < 205 else { throw APIErrors.invalidResponse }
         
         do {
             let decoder = JSONDecoder()
@@ -29,19 +29,20 @@ class Api {
             return decodedResponse
         } catch {
             
-            throw APIErros.invalidData
+            throw APIErrors.invalidData
         }
         
     }
     
-    //error handler
-    enum APIErros: Error {
-        
-        case invalidURL
-        case invalidResponse
-        case invalidData
-        case invalidRequest
-        
-    }
+    
+}
+
+//error handler
+enum APIErrors: Error {
+    
+    case invalidURL
+    case invalidResponse
+    case invalidData
+    case invalidRequest
     
 }
