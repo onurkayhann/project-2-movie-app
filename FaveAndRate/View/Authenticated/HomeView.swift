@@ -12,9 +12,16 @@ struct HomeView: View {
     @EnvironmentObject var movieManager: MovieManager
     
     var body: some View {
+        //Rendering users name, adding title design such as font
+        Text("Welcome ").font(.title) + Text(db.currentUserData?.name ?? "No user found")
+            .foregroundStyle(.customRed)
+            .font(.title)
+            .bold()
+        
+        Spacer() // this spacer pushes the welcome text up and scrollview down, we will deal with it later
+        
         VStack {
-            //Rendering users name, adding title design such as font
-            Text("Welcome, \(db.currentUserData?.name ?? "No user found")!")
+            
 
             ScrollView(.horizontal) {
                 
@@ -28,19 +35,6 @@ struct HomeView: View {
                 
             }
             
-                /*
-                ForEach(movieManager.movies) { movieDescription in
-                    
-                    
-                    VStack {
-                        
-                        /*
-                        Text("\(movieDescription.title) (\(movieDescription.year))")
-                                .font(.headline)
-                         */
-                    }
-                }
-            */
             
             Button("Logout", action: {
                 //Signing out
