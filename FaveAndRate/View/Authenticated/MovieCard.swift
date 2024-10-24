@@ -20,7 +20,7 @@ struct MovieCard: View {
         AsyncImage(url: URL(string: movie.poster), content: { poster in
             poster.resizable().overlay(alignment: .bottom, content: {
                 ZStack {
-                    Color(.black.opacity(0.3))
+                    Color(.black.opacity(0.2))
                     
                     VStack(spacing: 20) {
                         Text(movie.title).bold().font(.title3).foregroundStyle(.white)
@@ -53,7 +53,7 @@ struct MovieCard: View {
                 Text("Loading...").foregroundStyle(.black)
             }.background(.gray)
             
-        }).frame(width: 375, height: 250, alignment: .center).clipShape(.buttonBorder)
+        }).frame(width: 200, height: 250, alignment: .center).clipShape(RoundedRectangle(cornerRadius: 10))
        
         
         
