@@ -16,6 +16,8 @@ class DbConnection: ObservableObject {
     
     let COLLECTION_USER_DATA = "user_data"
     
+    @Published var movies: [Movie] = []
+    
     @Published var currentUser: User?
     @Published var currentUserData: UserData?
     
@@ -68,7 +70,7 @@ class DbConnection: ObservableObject {
                 self.currentUser = nil
                 self.userDataListener?.remove()
                 self.userDataListener = nil
-                self.currentUser = nil
+                self.currentUserData = nil
                 //Add for self.watchlist here
                 
             }
