@@ -36,9 +36,9 @@ struct MovieResponse: Codable {
 struct Movie: Codable, Identifiable {
         
         var id: String?
-        var title: String?
-        var year: Int?
-        var poster: String?
+        var title: String
+        var year: Int
+        var poster: String
         
         enum CodingKeys: String, CodingKey {
             case id = "#IMDB_ID"

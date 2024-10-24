@@ -29,11 +29,13 @@ struct FaveAndRateApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     @StateObject var dbConnection = DbConnection()
+    @StateObject var movieManager = MovieManager() // Is this suppose to be StateObject? This code fixed our login issue
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(dbConnection)
+                .environmentObject(movieManager) // Is this suppose to be StateObject? This code fixed our login issue
         }
     }
 }

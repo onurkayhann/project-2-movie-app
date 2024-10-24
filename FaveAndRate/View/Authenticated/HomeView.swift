@@ -21,10 +21,8 @@ struct HomeView: View {
                     
                     VStack {
                         
-                        if let title = movieDescription.title, let year = movieDescription.year {
-                            Text("\(title) (\(year))")
+                        Text("\(movieDescription.title) (\(movieDescription.year))")
                                 .font(.headline)
-                        }
                     }
                 }
             
