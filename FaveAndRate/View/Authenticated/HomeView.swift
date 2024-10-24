@@ -16,16 +16,31 @@ struct HomeView: View {
             //Rendering users name, adding title design such as font
             Text("Welcome, \(db.currentUserData?.name ?? "No user found")!")
 
+            ScrollView(.horizontal) {
                 
+                HStack(spacing: 15) {
+                    ForEach(movieManager.movies) { movies in
+                        MovieCard(movie: movies)
+                        
+                        // Make first image centered?
+                    }
+                }
+                
+            }
+            
+                /*
                 ForEach(movieManager.movies) { movieDescription in
+                    
                     
                     VStack {
                         
+                        /*
                         Text("\(movieDescription.title) (\(movieDescription.year))")
                                 .font(.headline)
+                         */
                     }
                 }
-            
+            */
             
             Button("Logout", action: {
                 //Signing out
