@@ -19,13 +19,11 @@ struct HomeView: View {
             ScrollView(.horizontal) {
                 
                 HStack(spacing: 15) {
-                    
                     ForEach(movieManager.movies) { movies in
                         MovieCard(movie: movies)
                         
-                        
+                        // Make first image centered?
                     }
-                    
                 }
                 
             }
