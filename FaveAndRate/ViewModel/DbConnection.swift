@@ -23,6 +23,20 @@ class DbConnection: ObservableObject {
     
     var userDataListener: ListenerRegistration?
     
+    func addMovieToWatchlist(movieId: String) {
+        guard let currentUser = currentUser else { return }
+        
+        db.collection(COLLECTION_USER_DATA)
+            .document(currentUser.uid)
+            .updateData(["watchlist" : FieldValue.arrayUnion([movieId])])
+    }
+    
+    func removeMovieFromWatchlist(movieId: String) {
+        guard let currentUser = currentUser else { return }
+        
+        db.collection(COLLECTION_USER_DATA).document(currentUser.uid).updateData(["watchlist": FieldValue.arrayRemove([movieId])])
+    }
+    
     //Function to register user
     func registerUser(email: String, password: String, name: String) {
         

@@ -26,21 +26,22 @@ struct MovieCard: View {
                         Text(movie.title).bold().font(.title3).foregroundStyle(.white)
                         
                         Button(action: {
-                            
+                            print("You clicked the button")
                             isFavorized.toggle()
                             
                             guard let movieId = movie.id else { return }
+                            db.addMovieToWatchlist(movieId: movieId)
                             
                             if isFavorized {
-                                // db.addToWatchlist
+                                db.addMovieToWatchlist(movieId: movieId)
                             } else {
-                                // db.removeFromWatchlist
+                                db.removeMovieFromWatchlist(movieId: movieId)
                             }
                             
                             print(isFavorized)
                             
                         }, label: {
-                            Image(systemName: isFavorized ? "plus.rectangle.portrait.fill" : "plus.rectangle.portrait").resizable().background(.gray.opacity(0.6)).frame(width: 24, height: 30, alignment: .center).foregroundStyle(.white).offset(x: -90, y: -136)
+                            Image(systemName: isFavorized ? "plus.rectangle.portrait.fill" : "plus.rectangle.portrait").resizable().background(.gray.opacity(0.6)).frame(width: 24, height: 30, alignment: .center).foregroundStyle(.white)/*.offset(x: -90, y: -136)*/
                         })
                     }.onAppear {
                         isFavorized = self.db.currentUserData?.watchlist.contains { $0 == movie.id } ?? false
