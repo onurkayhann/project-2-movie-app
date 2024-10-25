@@ -126,4 +126,10 @@ class DbConnection: ObservableObject {
             .updateData(["watchlist" : FieldValue.arrayUnion([movieId])])
     }
     
+    func removeMovieFromWatchlist(movieId: String) {
+        guard let currentUser = currentUser else { return }
+        
+        db.collection(COLLECTION_USER_DATA).document(currentUser.uid).updateData(["watchlist": FieldValue.arrayRemove([movieId])])
+    }
+    
 }
