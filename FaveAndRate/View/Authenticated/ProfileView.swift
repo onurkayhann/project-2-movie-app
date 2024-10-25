@@ -94,5 +94,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfielView().environmentObject(DbConnection()).environmentObject(MovieManager())
+    ProfileView().environmentObject(DbConnection()).environmentObject(MovieManager())
 }

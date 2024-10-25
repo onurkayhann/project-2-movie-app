@@ -31,5 +31,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView().environmentObject(DbConnection())
+    ContentView().environmentObject(DbConnection()).environmentObject(MovieManager())
 }
