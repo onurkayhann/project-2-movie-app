@@ -118,5 +118,12 @@ class DbConnection: ObservableObject {
         }
     }
     
+    func addMovieToWatchlist(movieId: String) {
+        guard let currentUser = currentUser else { return }
+        
+        db.collection(COLLECTION_USER_DATA)
+            .document(currentUser.uid)
+            .updateData(["watchlist" : FieldValue.arrayUnion([movieId])])
+    }
     
 }
