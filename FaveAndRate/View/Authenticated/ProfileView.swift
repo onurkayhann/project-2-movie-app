@@ -36,7 +36,7 @@ struct ProfileView: View {
             
             
             VStack(alignment: .leading) {
-                Text("Watchlist").padding(.horizontal, 10).foregroundStyle(.customRed)
+                Text("Your Watchlist").padding(.horizontal, 10).foregroundStyle(.customRed)
                     .font(.title3)
                     .bold()
                 if movieManager.movies.isEmpty {

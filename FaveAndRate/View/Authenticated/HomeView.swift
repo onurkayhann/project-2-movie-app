@@ -22,7 +22,7 @@ struct HomeView: View {
         
         VStack {
             
-
+            
             ScrollView(.horizontal) {
                 
                 HStack(spacing: 15) {
@@ -35,20 +35,31 @@ struct HomeView: View {
                 
             }
             
-            
-            Button("Logout", action: {
-                //Signing out
-                db.signOut()
-            })
-            .bold()
-            .padding()
-            .padding(.horizontal, 25)
-            .padding(.vertical, 5)
-            .foregroundStyle(.white)
-            .background(.customRed)
-            .clipShape(.buttonBorder)
-            .padding()
-            
+            HStack {
+                Button("Logout", action: {
+                    //Signing out
+                    db.signOut()
+                })
+                .bold()
+                .padding()
+                .padding(.horizontal, 25)
+                .padding(.vertical, 5)
+                .foregroundStyle(.white)
+                .background(.customRed)
+                .clipShape(.buttonBorder)
+                .padding()
+                
+                NavigationLink("Profile", destination: { ProfileView() })
+                    .bold()
+                    .padding()
+                    .padding(.horizontal, 25)
+                    .padding(.vertical, 5)
+                    .foregroundStyle(.white)
+                    .background(.customRed)
+                    .clipShape(.buttonBorder)
+                    .padding()
+                
+            }
         }
         .padding()
         .onAppear {
