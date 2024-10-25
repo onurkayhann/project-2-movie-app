@@ -15,6 +15,16 @@ class MovieManager: ObservableObject {
     
     let BASE_URL = "https://imdb.iamidiotareyoutoo.com"
     
+    init() {
+            Task {
+                do {
+                    try await getMovies()
+                } catch {
+                    print("Error loading movies: \(error.localizedDescription)")
+                }
+            }
+        }
+    
     func getMovies() async throws {
         
         let retrievedMovies: MovieResponse = try await api.get(url: "\(BASE_URL)/search?q=jönssonligan")
@@ -24,4 +34,8 @@ class MovieManager: ObservableObject {
         }
         
     }
+    
+    func getWatchlist(by id: String) -> Movie? {
+            return movies.first { $0.id == id }
+        }
 }
