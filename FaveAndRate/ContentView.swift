@@ -13,20 +13,44 @@ struct ContentView: View {
     
     var body: some View {
         
-        //Checks if user navigates to HomeView or LoginView
+        // checks if user is logged in or not
+        // when logged in -> tabView is visible
+        
         if db.currentUser != nil {
-            NavigationStack {
-                //Inloggad vy
-                HomeView()
+            TabView {
+                NavigationStack {
+                    HomeView()
+                }
+                .tabItem {
+                    Label("Home", systemImage: "house")
+                }
+                
+                NavigationStack {
+                    SearchMovieView()
+                }
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+                
+                NavigationStack {
+                    AboutView()
+                }
+                .tabItem {
+                    Label("About", systemImage: "info.circle")
+                }
+                
+                NavigationStack {
+                    ProfileView()
+                }
+                .tabItem {
+                    Label("Profile", systemImage: "person.circle")
+                }
             }
         } else {
-            //Utloggad vy
             NavigationStack {
                 LoginView()
             }
         }
-        
-
     }
 }
 

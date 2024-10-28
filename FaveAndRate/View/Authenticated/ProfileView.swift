@@ -96,3 +96,11 @@ struct ProfileView: View {
 #Preview {
     ProfileView().environmentObject(DbConnection()).environmentObject(MovieManager())
 }
+
+
+/*
+    MARK: TODO
+    - add settings icon and navigation
+    - create SettingsView
+ 
+ */
