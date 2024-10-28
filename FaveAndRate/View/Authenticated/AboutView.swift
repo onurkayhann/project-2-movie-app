@@ -82,3 +82,9 @@ struct AboutView: View {
 #Preview {
     AboutView()
 }
+
+/*
+    MARK: TODO
+    - Maybe move SettingsView outside TabView or maybe move out About?
+ 
+*/
