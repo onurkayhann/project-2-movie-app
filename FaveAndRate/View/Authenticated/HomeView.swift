@@ -49,16 +49,6 @@ struct HomeView: View {
                 .clipShape(.buttonBorder)
                 .padding()
                 
-                NavigationLink("Profile", destination: { ProfileView() })
-                    .bold()
-                    .padding()
-                    .padding(.horizontal, 25)
-                    .padding(.vertical, 5)
-                    .foregroundStyle(.white)
-                    .background(.customRed)
-                    .clipShape(.buttonBorder)
-                    .padding()
-                
             }
         }
         .padding()
