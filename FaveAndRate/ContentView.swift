@@ -26,6 +26,20 @@ struct ContentView: View {
                 }
                 
                 NavigationStack {
+                    SearchMovieView()
+                }
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+                
+                NavigationStack {
+                    AboutView()
+                }
+                .tabItem {
+                    Label("About", systemImage: "info.circle")
+                }
+                
+                NavigationStack {
                     ProfileView()
                 }
                 .tabItem {
