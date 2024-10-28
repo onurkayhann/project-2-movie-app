@@ -41,6 +41,13 @@ struct ContentView: View {
                 }
                 
                 NavigationStack {
+                    SettingsView()
+                }
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape")
+                }
+                
+                NavigationStack {
                     ProfileView()
                 }
                 .tabItem {
