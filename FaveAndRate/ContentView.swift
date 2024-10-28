@@ -34,6 +34,7 @@ struct ContentView: View {
                 
                 NavigationStack {
                     AboutView()
+                        
                 }
                 .tabItem {
                     Label("About", systemImage: "info.circle")
