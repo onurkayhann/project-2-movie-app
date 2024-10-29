@@ -12,6 +12,7 @@ class MovieManager: ObservableObject {
     let api = Api()
     
     @Published var movies: [Movie] = []
+    @Published var userInput: String = ""
     
     let BASE_URL = "https://imdb.iamidiotareyoutoo.com"
     
@@ -27,12 +28,29 @@ class MovieManager: ObservableObject {
     
     func getMovies() async throws {
         
+        
         let retrievedMovies: MovieResponse = try await api.get(url: "\(BASE_URL)/search?q=jönssonligan")
         
         DispatchQueue.main.async {
             self.movies = retrievedMovies.description
         }
         
+    }
+    
+    func searchMovies() async throws {
+        guard !userInput.isEmpty else {
+            
+            DispatchQueue.main.async {
+                self.movies = []
+            }
+            return
+        }
+        
+        let retrievedMovies: MovieResponse = try await api.get(url: "\(BASE_URL)/search?q=\(userInput)")
+        
+        DispatchQueue.main.async {
+            self.movies = retrievedMovies.description
+        }
     }
     
     func getWatchlist(by id: String) -> Movie? {
