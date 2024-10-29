@@ -47,6 +47,6 @@ struct AboutView: View {
 /*
     MARK: TODO
     - Maybe move SettingsView outside TabView or maybe move out About?
-    - Optimize the design?
+    - Optimize the design??
  
 */
