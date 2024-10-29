@@ -11,8 +11,6 @@ struct SearchMovieView: View {
     @EnvironmentObject var db: DbConnection
     @EnvironmentObject var movieManager: MovieManager
     
-    
-    
     var body: some View {
         
         NavigationStack {
