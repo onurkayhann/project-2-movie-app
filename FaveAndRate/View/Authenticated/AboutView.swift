@@ -12,11 +12,11 @@ struct AboutView: View {
     
     var body: some View {
         
-        Text("About Us").font(.title2).bold()
-        Spacer()
-        
-        Text("Welcome to Fave & Rate – your personal gateway to the world of movies and TV shows! Whether you’re a casual viewer or a cinema enthusiast, our app brings together everything you need to explore, discover, and keep track of your favorite content. With an extensive database of movies, TV shows, actors, directors, and crew, Fave & Rate provides in-depth information, including cast details, reviews, ratings, trailers, and more.").padding(20)
-        
+        VStack {
+            Text("About Us").font(.title2).bold()
+            
+            Text("Welcome to Fave & Rate – your personal gateway to the world of movies and TV shows! Whether you’re a casual viewer or a cinema enthusiast, our app brings together everything you need to explore, discover, and keep track of your favorite content. With an extensive database of movies, TV shows, actors, directors, and crew, Fave & Rate provides in-depth information, including cast details, reviews, ratings, trailers, and more.").padding(20)//.padding(.horizontal, 20)
+        }
         Spacer()
         
         Text("This is us").padding(10)
