@@ -10,71 +10,28 @@ import MapKit
 
 struct AboutView: View {
     
-    let locationManager = LocationManager()
-    
-    @State var position = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 59.309857850079666, longitude: 18.022240207022453), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)))
-    
-    @State var office = Office(name: "Fave & Rate", location: Location(latitude: 59.309567930490935, longitude: 18.02159818846419))
-    
-    @State var selectedOffice: Office? = nil
-    
-    
     var body: some View {
         
-        ZStack {
-            
-            Map(position: $position) {
-                
-                
-                Annotation("", coordinate: CLLocationCoordinate2D(latitude: office.location.latitude, longitude: office.location.longitude)) {
-                                    
-                                    Button(action: {
-                                        print("\(office.name) pressed!")
-                                        
-                                        if self.selectedOffice?.id == office.id {
-                                            self.selectedOffice = nil
-                                        } else {
-                                            self.selectedOffice = office
-                                        }
-                                    }) {
-                                        VStack {
-                                            Circle()
-                                                .foregroundStyle(.red)
-                                                .frame(width: 20, height: 20, alignment: .center)
-                                            Text(office.name)
-                                                .font(.system(size: 12))
-                                                .foregroundStyle(.black)
-                                        }
-                                    }
-                                }
-            }.mapControls {
-                MapUserLocationButton()
-                MapPitchToggle()
-            }
-            
-
+        Text("About Us").font(.title2).bold()
+        Spacer()
+        
+        Text("Welcome to Fave & Rate – your personal gateway to the world of movies and TV shows! Whether you’re a casual viewer or a cinema enthusiast, our app brings together everything you need to explore, discover, and keep track of your favorite content. With an extensive database of movies, TV shows, actors, directors, and crew, Fave & Rate provides in-depth information, including cast details, reviews, ratings, trailers, and more.").padding(20)
+        
+        Spacer()
+        
+        Text("This is us").padding(10)
+        HStack {
             
             VStack {
-                
-                Spacer()
-                
-                if let selectedOffice = selectedOffice {
-                    
-                    Button(action: {
-                        
-                    }, label: {
-                        Text(selectedOffice.name).bold()
-                            .padding()
-                            .background(.black)
-                            .foregroundStyle(.white)
-                            .clipShape(.buttonBorder)
-                    })
-                }
-                
-                
-                
+                Image("CustomOnurImageSecond").resizable().frame(width: 130, height: 150)
+                Text("Onur")
+                Text("Founder")
             }
-            
+            VStack {
+                Image("CustomHampusImageSecond").resizable().frame(width: 150, height: 150)
+                Text("Hampus")
+                Text("Founder")
+            }
         }
     }
 }
