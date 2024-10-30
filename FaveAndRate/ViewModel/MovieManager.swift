@@ -17,14 +17,14 @@ class MovieManager: ObservableObject {
     let BASE_URL = "https://imdb.iamidiotareyoutoo.com"
     
     init() {
-            Task {
-                do {
-                    try await getMovies()
-                } catch {
-                    print("Error loading movies: \(error.localizedDescription)")
-                }
+        Task {
+            do {
+                try await getMovies()
+            } catch {
+                print("Error loading movies: \(error.localizedDescription)")
             }
         }
+    }
     
     func getMovies() async throws {
         
@@ -38,6 +38,8 @@ class MovieManager: ObservableObject {
     }
     
     func searchMovies() async throws {
+        
+        
         guard !userInput.isEmpty else {
             
             DispatchQueue.main.async {
@@ -46,6 +48,7 @@ class MovieManager: ObservableObject {
             return
         }
         
+        print("User input: \(userInput)")
         let retrievedMovies: MovieResponse = try await api.get(url: "\(BASE_URL)/search?q=\(userInput)")
         
         DispatchQueue.main.async {

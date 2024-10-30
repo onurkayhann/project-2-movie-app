@@ -11,13 +11,17 @@ struct SearchMovieView: View {
     @EnvironmentObject var db: DbConnection
     @EnvironmentObject var movieManager: MovieManager
     
+    
     var body: some View {
         
         NavigationStack {
             ScrollView {
                 ForEach(movieManager.movies, id: \.id) { movie in
+                    NavigationLink(destination: AboutMovieView(movie: movie), label: {
+                        MovieCard(movie: movie)
+                    })
+                        
                     
-                    MovieCard(movie: movie)
                 }
             }
             .searchable(text: $movieManager.userInput, prompt: "Search movies")
