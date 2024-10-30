@@ -52,5 +52,12 @@ struct Movie: Codable, Identifiable {
         }
     }
 
+// Ahmads förslag?
+struct SingleMovie: Decodable {
+    var id: String?
+    var name: String
+    
+}
+
 //Make a new struct to use for user adding movies/series to FireStore
     

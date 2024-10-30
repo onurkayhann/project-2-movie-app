@@ -56,6 +56,16 @@ class MovieManager: ObservableObject {
         }
     }
     
+    // Ahmads förslag?
+    func getMovieById(id: String) async throws {
+        
+        let retrievedMovies: MovieResponse = try await api.get(url: "\(BASE_URL)/search?tt=\(id)")
+        
+        DispatchQueue.main.async {
+            self.movies = retrievedMovies.description
+        }
+    }
+    
     func getWatchlist(by id: String) -> Movie? {
             return movies.first { $0.id == id }
         }
