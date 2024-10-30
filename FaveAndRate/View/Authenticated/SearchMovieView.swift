@@ -17,8 +17,10 @@ struct SearchMovieView: View {
         NavigationStack {
             ScrollView {
                 ForEach(movieManager.movies, id: \.id) { movie in
-                    
+                    NavigationLink(destination: AboutMovieView(movie: movie), label: {
                         MovieCard(movie: movie)
+                    })
+                        
                     
                 }
             }

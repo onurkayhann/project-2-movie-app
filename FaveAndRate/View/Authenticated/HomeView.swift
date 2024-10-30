@@ -19,10 +19,9 @@ struct HomeView: View {
                 .font(.title)
                 .bold()
             
-            Spacer() // this spacer pushes the welcome text up and scrollview down, we will deal with it later
+            Spacer()
             
             
-        NavigationStack {
             VStack {
                 
                 ScrollView(.horizontal) {
@@ -68,7 +67,6 @@ struct HomeView: View {
             //Adding API here, such as movies in horizontal scrollview
             //Add navigation to MovieView
             //Add bottom tab view, such as home and settings
-        }
     }
 }
 
