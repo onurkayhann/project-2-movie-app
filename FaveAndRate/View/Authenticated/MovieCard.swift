@@ -71,12 +71,12 @@ struct MovieCard: View {
 }
 
 #Preview {
-    MovieCard(movie: Movie(title: "The Master Plan", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg")).environmentObject(DbConnection())
+    MovieCard(movie: Movie(title: "The Master Plan", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
 }
 
 /*
 
-    MARK: TODO
-    - Add check icon when movie is added
+    MARK: TODOS
+    
  
 */

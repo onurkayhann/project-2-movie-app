@@ -37,15 +37,18 @@ struct Movie: Codable, Identifiable {
         
         var id: String?
         var title: String
-        var year: Int
+        var year: Int?
         var poster: String
+        var actors: String
+        var rank: Int
         
         enum CodingKeys: String, CodingKey {
             case id = "#IMDB_ID"
             case title = "#TITLE"
             case year = "#YEAR"
             case poster = "#IMG_POSTER"
-            // add more movie description later
+            case actors = "#ACTORS"
+            case rank = "#RANK"
         }
     }
 

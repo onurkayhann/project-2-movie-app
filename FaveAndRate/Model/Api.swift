@@ -27,7 +27,9 @@ class Api {
             let decodedResponse = try decoder.decode(R.self, from: data)
             
             return decodedResponse
-        } catch {
+        } catch let error {
+            
+            print("Error! \(error)")
             
             throw APIErrors.invalidData
         }

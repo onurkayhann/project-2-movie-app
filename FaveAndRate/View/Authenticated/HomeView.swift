@@ -11,60 +11,64 @@ struct HomeView: View {
     @EnvironmentObject var db: DbConnection
     @EnvironmentObject var movieManager: MovieManager
     
+    
     var body: some View {
-        //Rendering users name, adding title design such as font
-        Text("Welcome ").font(.title) + Text(db.currentUserData?.name ?? "No user found")
-            .foregroundStyle(.customRed)
-            .font(.title)
-            .bold()
-        
-        Spacer() // this spacer pushes the welcome text up and scrollview down, we will deal with it later
-        
-        VStack {
-            
-            
-            ScrollView(.horizontal) {
-                
-                HStack(spacing: 15) {
-                    ForEach(movieManager.movies) { movies in
-                        MovieCard(movie: movies)
-                        
-                        // Make first image centered?
-                    }
-                }
-                
-            }
-            
-            HStack {
-                Button("Logout", action: {
-                    //Signing out
-                    db.signOut()
-                })
+            //Rendering users name, adding title design such as font
+            Text("Welcome ").font(.title) + Text(db.currentUserData?.name ?? "No user found")
+                .foregroundStyle(.customRed)
+                .font(.title)
                 .bold()
-                .padding()
-                .padding(.horizontal, 25)
-                .padding(.vertical, 5)
-                .foregroundStyle(.white)
-                .background(.customRed)
-                .clipShape(.buttonBorder)
-                .padding()
+            
+            Spacer() // this spacer pushes the welcome text up and scrollview down, we will deal with it later
+            
+            
+        NavigationStack {
+            VStack {
                 
-            }
-        }
-        .padding()
-        .onAppear {
-                    Task {
-                        do {
-                            try await movieManager.getMovies()
-                        } catch {
-                            print("Error fetching movies: \(error)")
+                ScrollView(.horizontal) {
+                    
+                    HStack(spacing: 15) {
+                        ForEach(movieManager.movies) { movies in
+                            NavigationLink(destination: AboutMovieView(movie: movies)) {
+                                MovieCard(movie: movies)
+                            }
+                            
                         }
                     }
+                    
                 }
-        
-        //Adding API here, such as movies in horizontal scrollview
-        //Add navigation to MovieView
-        //Add bottom tab view, such as home and settings
+                
+                HStack {
+                    Button("Logout", action: {
+                        //Signing out
+                        db.signOut()
+                    })
+                    .bold()
+                    .padding()
+                    .padding(.horizontal, 25)
+                    .padding(.vertical, 5)
+                    .foregroundStyle(.white)
+                    .background(.customRed)
+                    .clipShape(.buttonBorder)
+                    .padding()
+                    
+                }
+            }
+            .padding()
+            .onAppear {
+                Task {
+                    do {
+                        try await movieManager.getMovies()
+                    } catch {
+                        print("Error fetching movies: \(error)")
+                    }
+                }
+            }
+            
+            //Adding API here, such as movies in horizontal scrollview
+            //Add navigation to MovieView
+            //Add bottom tab view, such as home and settings
+        }
     }
 }
 
