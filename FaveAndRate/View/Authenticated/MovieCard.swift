@@ -80,6 +80,11 @@ struct MovieCard: View {
                     .offset(y: -12.5)
                 
                 Text(movie.title)
+                    .foregroundStyle(.black)
+                    .multilineTextAlignment(.center)
+                            .lineLimit(nil) // Allows multiple lines
+                            .fixedSize(horizontal: false, vertical: true) // Expands vertically
+                            .padding(.horizontal, 8)
             }
             .padding(.top, -8)
             
@@ -91,12 +96,12 @@ struct MovieCard: View {
 }
 
 #Preview {
-    MovieCard(movie: Movie(title: "The Master Plan", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
+    MovieCard(movie: Movie(title: "The Master Plan Bla Bla Bla", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
 }
 
 /*
 
     MARK: TODOS
-    
+    - make a new separate moviecard without the gray rectangle and the movie name
  
 */
