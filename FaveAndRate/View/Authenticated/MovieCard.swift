@@ -17,13 +17,15 @@ struct MovieCard: View {
     
     var body: some View {
     
+        VStack {
+            
             AsyncImage(url: URL(string: movie.poster), content: { poster in
                 poster.resizable().overlay(alignment: .bottom, content: {
                     ZStack {
                         Color(.black.opacity(0.2))
                         
                         VStack(spacing: 20) {
-
+                            
                             HStack {
                                 Button(action: {
                                     print("You clicked the button")
@@ -40,13 +42,14 @@ struct MovieCard: View {
                                     
                                     print(isFavorized)
                                     
+                                    
                                 }, label: {
                                     Image(systemName: isFavorized ? "checkmark.rectangle.portrait.fill" : "plus.rectangle.portrait").resizable().background(.gray.opacity(0.6)).frame(width: 24, height: 30, alignment: .center).foregroundStyle(.white).padding(.leading, -2).padding(.top, -2)
                                 })
                                 
                                 Spacer()
                             }
-
+                            
                             
                             Spacer()
                             
@@ -64,8 +67,25 @@ struct MovieCard: View {
                 }.background(.gray)
                 
             }).frame(width: 150, height: 200, alignment: .center).clipShape(RoundedRectangle(cornerRadius: 10))
-        
-        
+            
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.gray)
+                    .frame(width: 150, height: 50)
+                
+                
+                Rectangle()
+                    .fill(Color.gray)
+                    .frame(width: 150, height: 25)
+                    .offset(y: -12.5)
+                
+                Text(movie.title)
+            }
+            .padding(.top, -8)
+            
+            
+            
+        }
         
     }
 }
