@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MovieCard: View {
     
-    var movie: Movie
+    var movie: ApiMovie
     
     @EnvironmentObject var db: DbConnection
     
@@ -32,12 +32,14 @@ struct MovieCard: View {
                                     isFavorized.toggle()
                                     
                                     guard let movieId = movie.id else { return }
-                                    db.addMovieToWatchlist(movieId: movieId)
+                                    
+                                    let watchlistMovie = movie.toWatchlistMovie()
+                                    //db.addMovieToWatchlist(movie: WatchlistMovie)
                                     
                                     if isFavorized {
-                                        db.addMovieToWatchlist(movieId: movieId)
+                                        db.addMovieToWatchlist(movie: watchlistMovie)
                                     } else {
-                                        db.removeMovieFromWatchlist(movieId: movieId)
+                                        db.removeMovieFromWatchlist(movieId: watchlistMovie)
                                     }
                                     
                                     print(isFavorized)
@@ -56,7 +58,7 @@ struct MovieCard: View {
                             //Text(movie.title).bold().font(.title3).foregroundStyle(.white)
                             
                         }.onAppear {
-                            isFavorized = self.db.currentUserData?.watchlist.contains { $0 == movie.id } ?? false
+                            isFavorized = self.db.currentUserData?.watchlist.contains { $0.id == movie.id } ?? false
                         }
                     }
                 })
@@ -96,7 +98,7 @@ struct MovieCard: View {
 }
 
 #Preview {
-    MovieCard(movie: Movie(title: "The Master Plan Bla Bla Bla", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
+    MovieCard(movie: ApiMovie(title: "The Master Plan Bla Bla Bla", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
 }
 
 /*

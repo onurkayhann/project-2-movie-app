@@ -16,25 +16,27 @@ class DbConnection: ObservableObject {
     
     let COLLECTION_USER_DATA = "user_data"
     
-    @Published var movies: [Movie] = []
+    @Published var movies: [ApiMovie] = []
     
     @Published var currentUser: User?
     @Published var currentUserData: UserData?
     
     var userDataListener: ListenerRegistration?
     
-    func addMovieToWatchlist(movieId: String) {
+    func addMovieToWatchlist(movie: WatchlistMovie) {
         guard let currentUser = currentUser else { return }
         
         db.collection(COLLECTION_USER_DATA)
             .document(currentUser.uid)
-            .updateData(["watchlist" : FieldValue.arrayUnion([movieId])])
+            .updateData(["watchlist": FieldValue.arrayUnion([movie.toDictionary()])])
     }
     
-    func removeMovieFromWatchlist(movieId: String) {
+    func removeMovieFromWatchlist(movieId: WatchlistMovie) {
         guard let currentUser = currentUser else { return }
         
-        db.collection(COLLECTION_USER_DATA).document(currentUser.uid).updateData(["watchlist": FieldValue.arrayRemove([movieId])])
+        db.collection(COLLECTION_USER_DATA)
+            .document(currentUser.uid)
+            .updateData(["watchlist": FieldValue.arrayRemove([movieId.toDictionary()])])
     }
     
     //Function to register user
@@ -109,7 +111,11 @@ class DbConnection: ObservableObject {
     //Function that listens on userdata
     func startUserDataListener() {
         
-        guard let currentUser = currentUser else { return }
+        guard let currentUser = currentUser else { print("No current user found.")
+            return }
+        
+        
+        print("Starting user data listener for user: \(currentUser.uid)")
         
         userDataListener = db.collection(COLLECTION_USER_DATA).document(currentUser.uid).addSnapshotListener { snapshot, error in
             

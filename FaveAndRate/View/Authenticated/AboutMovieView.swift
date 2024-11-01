@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AboutMovieView: View {
-    var movie: Movie
+    var movie: ApiMovie
     
     @EnvironmentObject var db: DbConnection
     @State var isFavorized = false
@@ -58,12 +58,13 @@ struct AboutMovieView: View {
                     isFavorized.toggle()
                     
                     guard let movieId = movie.id else { return }
-                    db.addMovieToWatchlist(movieId: movieId)
+                    
+                    let watchlistMovie = movie.toWatchlistMovie()
                     
                     if isFavorized {
-                        db.addMovieToWatchlist(movieId: movieId)
+                        db.addMovieToWatchlist(movie: watchlistMovie)
                     } else {
-                        db.removeMovieFromWatchlist(movieId: movieId)
+                        db.removeMovieFromWatchlist(movieId: watchlistMovie)
                     }
                 }) {
                     HStack {
@@ -89,5 +90,5 @@ struct AboutMovieView: View {
 }
 
 #Preview {
-    AboutMovieView(movie: Movie(title: "The Master Plan", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
+    AboutMovieView(movie: ApiMovie(title: "The Master Plan", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
 }
