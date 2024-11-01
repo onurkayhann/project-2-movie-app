@@ -23,6 +23,26 @@ class DbConnection: ObservableObject {
     
     var userDataListener: ListenerRegistration?
     
+    func addCommentToMovie(movieId: String, text: String) {
+        guard let currentUser = currentUser else { return }
+
+        let newComment = MovieComment(id: UUID().uuidString, userId: currentUser.uid, movieId: movieId, text: text)
+        
+        db.collection(COLLECTION_USER_DATA)
+            .document(currentUser.uid)
+            .updateData(["comments": FieldValue.arrayUnion([newComment.toDictionary()])]) { error in
+                if let error = error {
+                    print("Error adding comment: \(error.localizedDescription)")
+                } else {
+                    print("Comment successfully added.")
+                }
+            }
+    }
+    
+    func getCommentsForMovie(movieId: String) -> [MovieComment] {
+        return currentUserData?.movieComment?.filter { $0.movieId == movieId } ?? []
+    }
+    
     func addMovieToWatchlist(movie: WatchlistMovie) {
         guard let currentUser = currentUser else { return }
         

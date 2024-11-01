@@ -49,3 +49,14 @@ struct MovieComment: Codable, Identifiable {
     var movieId: String
     var text: String
 }
+
+extension MovieComment {
+    func toDictionary() -> [String: Any] {
+        return [
+            "id": id,
+            "userId": userId,
+            "movieId": movieId,
+            "text": text,
+        ]
+    }
+}
