@@ -30,10 +30,10 @@ struct MoviesWrapper: Decodable {
  */
 
 struct MovieResponse: Codable {
-    var description: [Movie]
+    var description: [ApiMovie]
 }
     
-struct Movie: Codable, Identifiable {
+struct ApiMovie: Codable, Identifiable {
         
         var id: String?
         var title: String
@@ -51,6 +51,15 @@ struct Movie: Codable, Identifiable {
             case rank = "#RANK"
         }
     }
+
+
+extension ApiMovie {
+    
+    func toWatchlistMovie() -> WatchlistMovie {
+        return WatchlistMovie(id: id, title: title, year: year, poster: poster, actors: actors, rank: rank)
+    }
+    
+}
 
 // Ahmads förslag?
 struct SingleMovie: Decodable {

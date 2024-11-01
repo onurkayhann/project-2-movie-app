@@ -12,6 +12,7 @@ struct ProfileView: View {
     @EnvironmentObject var db: DbConnection
     @EnvironmentObject var movieManager: MovieManager
     
+    
     var body: some View {
         
         VStack {
@@ -47,13 +48,8 @@ struct ProfileView: View {
                         HStack(spacing: 15) {
                             
                             if let watchlist = db.currentUserData?.watchlist {
-                                ForEach(watchlist, id: \.self) { movieId in
-                                    if let movie = movieManager.getWatchlist(by: movieId) {
-                                        MovieCard(movie: movie)
-                                    } else {
-                                        Text("Movie not found")
-                                            .foregroundStyle(.secondary)
-                                    }
+                                ForEach(watchlist) { watchlistMovie in
+                                    MovieCard(movie: watchlistMovie.toApiMovie())
                                 }
                             }
                         }
@@ -74,13 +70,10 @@ struct ProfileView: View {
                         HStack(spacing: 15) {
                             
                             if let watchlist = db.currentUserData?.watchlist {
-                                ForEach(watchlist, id: \.self) { movieId in
-                                    if let movie = movieManager.getWatchlist(by: movieId) {
-                                        MovieCard(movie: movie)
-                                    } else {
-                                        Text("Movie not found")
-                                            .foregroundStyle(.secondary)
-                                    }
+                                ForEach(watchlist) { watchlistMovie in
+                                 
+                                    MovieCard(movie: watchlistMovie.toApiMovie())
+                    
                                 }
                             }
                         }

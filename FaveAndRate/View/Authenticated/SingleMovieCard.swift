@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SingleMovieCard: View {
-    var movie: Movie
+    var movie: ApiMovie
     
     @EnvironmentObject var db: DbConnection
     
@@ -28,7 +28,7 @@ struct SingleMovieCard: View {
                             Spacer()
                                                         
                         }.onAppear {
-                            isFavorized = self.db.currentUserData?.watchlist.contains { $0 == movie.id } ?? false
+                            isFavorized = self.db.currentUserData?.watchlist.contains { $0.id == movie.id } ?? false
                         }
                     }
                 })
@@ -46,5 +46,5 @@ struct SingleMovieCard: View {
 }
 
 #Preview {
-    SingleMovieCard(movie: Movie(title: "The Master Plan Bla Bla Bla", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
+    SingleMovieCard(movie: ApiMovie(title: "The Master Plan Bla Bla Bla", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
 }

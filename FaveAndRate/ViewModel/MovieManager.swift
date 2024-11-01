@@ -11,7 +11,7 @@ class MovieManager: ObservableObject {
     
     let api = Api()
     
-    @Published var movies: [Movie] = []
+    @Published var movies: [ApiMovie] = []
     @Published var userInput: String = ""
     
     let BASE_URL = "https://imdb.iamidiotareyoutoo.com"
@@ -66,7 +66,7 @@ class MovieManager: ObservableObject {
         }
     }
     
-    func getWatchlist(by id: String) -> Movie? {
+    func getWatchlist(by id: String) -> ApiMovie? {
             return movies.first { $0.id == id }
         }
 }
