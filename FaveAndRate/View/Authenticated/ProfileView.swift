@@ -71,9 +71,9 @@ struct ProfileView: View {
                             
                             if let watchlist = db.currentUserData?.watchlist {
                                 ForEach(watchlist) { watchlistMovie in
-                                 
+                                    
                                     MovieCard(movie: watchlistMovie.toApiMovie())
-                    
+                                    
                                 }
                             }
                         }
@@ -92,8 +92,8 @@ struct ProfileView: View {
 
 
 /*
-    MARK: TODO
-    - add settings icon and navigation
-    - create SettingsView
+ MARK: TODO
+ - add settings icon and navigation
+ - create SettingsView
  
  */
