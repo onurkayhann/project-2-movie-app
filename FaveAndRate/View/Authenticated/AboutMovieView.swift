@@ -11,7 +11,15 @@ struct AboutMovieView: View {
     var movie: ApiMovie
     
     @EnvironmentObject var db: DbConnection
+    
     @State var isFavorized = false
+    @State var userComment = ""
+    
+    var filteredComments: [MovieComment] {
+        let comments = db.getCommentsForMovie(movieId: movie.id ?? "")
+        print("Filtered comments for movie \(movie.id ?? "unknown"): \(comments)") // Debugging line
+        return comments
+    }
     
     var body: some View {
         ZStack {
@@ -34,9 +42,7 @@ struct AboutMovieView: View {
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        
-                        
-                        
+                                                
                         SingleMovieCard(movie: movie)
                         
                         Text("Actors: \(movie.actors)")
@@ -44,15 +50,39 @@ struct AboutMovieView: View {
                             .foregroundColor(.white)
                             .padding(.bottom, 16)
                         
+                        
                         Spacer()
                     }
                     .padding()
                     
-                    
                     Spacer()
                     
-                
+                    
+                    
                 }
+                
+                VStack {
+                    
+                    CommentsView(comments: filteredComments)
+                }
+                .background(.yellow)
+                
+                
+                
+                HStack {
+                    TextEditor(text: $userComment).frame(width: 250, height: 100)
+                    Button("Save") {
+                        guard let movieId = movie.id, !userComment.isEmpty else { return }
+                        
+                        // Call the function to add the comment
+                        db.addCommentToMovie(movieId: movieId, text: userComment)
+                        
+                        // Clear the text editor after saving
+                        userComment = ""
+                    }
+                    .background(.customRed).foregroundStyle(.white)
+                }
+                
                 
                 Button(action: {
                     isFavorized.toggle()
@@ -68,9 +98,9 @@ struct AboutMovieView: View {
                     }
                 }) {
                     HStack {
-                           Image(systemName: isFavorized ? "checkmark" : "plus")
+                        Image(systemName: isFavorized ? "checkmark" : "plus")
                         Text(isFavorized ? "Added to Watchlist" : "Add to Watchlist")
-                       }
+                    }
                 }
                 .bold()
                 .padding()
@@ -85,6 +115,7 @@ struct AboutMovieView: View {
                 
                 Spacer()
             }
+
         }
     }
 }

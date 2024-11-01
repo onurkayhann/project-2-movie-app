@@ -11,6 +11,7 @@ struct UserData: Codable {
 
     var name: String
     var watchlist: [WatchlistMovie]
+    var movieComment: [MovieComment]?
     
 }
 
@@ -39,5 +40,23 @@ struct WatchlistMovie: Codable, Identifiable {
 extension WatchlistMovie {
     func toApiMovie() -> ApiMovie {
         return ApiMovie(id: id, title: title, year: year, poster: poster, actors: actors, rank: rank)
+    }
+}
+
+struct MovieComment: Codable, Identifiable {
+    var id: String
+    var userId: String
+    var movieId: String
+    var text: String
+}
+
+extension MovieComment {
+    func toDictionary() -> [String: Any] {
+        return [
+            "id": id,
+            "userId": userId,
+            "movieId": movieId,
+            "text": text,
+        ]
     }
 }
