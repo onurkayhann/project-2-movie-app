@@ -16,6 +16,10 @@ struct AboutMovieView: View {
     @State var userComment = ""
     
     var filteredComments: [MovieComment] {
+        guard let movieId = movie.id else {
+                print("Error: movie.id is nil")
+                return [] // Return an empty array if movie.id is nil
+            }
         let comments = db.getCommentsForMovie(movieId: movie.id ?? "")
         print("Filtered comments for movie \(movie.id ?? "unknown"): \(comments)") // Debugging line
         return comments
@@ -28,6 +32,8 @@ struct AboutMovieView: View {
                 .opacity(0.92)
             
             VStack {
+                Text("Current Movie: \(movie.title), ID: \(String(describing: movie.id))")
+                                .foregroundColor(.white) // only to debug and to see the movies id
                 Text(movie.title)
                     .font(.title)
                     .foregroundColor(.white)
