@@ -39,7 +39,9 @@ class DbConnection: ObservableObject {
             }
     }
     
+    
     func getCommentsForMovie(movieId: String) -> [MovieComment] {
+        print("Current User Data: \(String(describing: currentUserData))")
         return currentUserData?.movieComment?.filter { $0.movieId == movieId } ?? []
     }
     
