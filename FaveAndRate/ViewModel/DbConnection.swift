@@ -8,11 +8,15 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseStorage
+
 
 class DbConnection: ObservableObject {
     
     var db = Firestore.firestore()
     var auth = Auth.auth()
+    let storage = Storage.storage()  // Add this line to initialize Firebase Storage
+
     
     let COLLECTION_USER_DATA = "user_data"
     
@@ -22,6 +26,53 @@ class DbConnection: ObservableObject {
     @Published var currentUserData: UserData?
     
     var userDataListener: ListenerRegistration?
+    
+    func uploadAudioToFirebase(movieId: String, audioURL: URL, completion: @escaping (Bool) -> Void) {
+            guard let currentUser = currentUser else {
+                print("No current user found.")
+                completion(false)
+                return
+            }
+            
+            let storageRef = storage.reference()
+            let audioRef = storageRef.child("audioComments/\(movieId)/\(UUID().uuidString).m4a")
+            
+            audioRef.putFile(from: audioURL, metadata: nil) { metadata, error in
+                if let error = error {
+                    print("Error uploading audio: \(error.localizedDescription)")
+                    completion(false)
+                    return
+                }
+                
+                audioRef.downloadURL { url, error in
+                    if let error = error {
+                        print("Error getting download URL: \(error.localizedDescription)")
+                        completion(false)
+                        return
+                    }
+                    
+                    if let downloadURL = url {
+                        // Save the audio comment URL in Firestore
+                        self.db.collection("movies")
+                            .document(movieId)
+                            .collection("audioComments")
+                            .addDocument(data: [
+                                "userId": currentUser.uid,
+                                "audioURL": downloadURL.absoluteString,
+                                "timestamp": Timestamp()
+                            ]) { error in
+                                if let error = error {
+                                    print("Error saving audio comment: \(error.localizedDescription)")
+                                    completion(false)
+                                } else {
+                                    print("Audio comment saved successfully!")
+                                    completion(true)
+                                }
+                            }
+                    }
+                }
+            }
+        }
     
     func fetchCommentsForMovie(movieId: String) {
             guard let currentUser = currentUser else { return }

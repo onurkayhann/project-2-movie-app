@@ -9,60 +9,54 @@ import SwiftUI
 
 struct AboutMovieView: View {
     var movie: ApiMovie
-    
+
     @EnvironmentObject var db: DbConnection
-    
-    @State var isFavorized = false
-    @State var userComment = ""
-    
+    @StateObject private var audioRecorder = AudioManager()
+
+    @State private var isFavorized = false
+    @State private var userComment = ""
+
     var filteredComments: [MovieComment] {
         let comments = db.comments.filter { $0.movieId == movie.id }
         print("Filtered comments for movie \(movie.id ?? "unknown"): \(comments)")
         return comments
     }
-    
+
     var body: some View {
         ZStack {
-            Color.black
-                .ignoresSafeArea()
-                .opacity(0.92)
-            
+            Color.black.ignoresSafeArea().opacity(0.92)
+
             VStack {
                 Text("Current Movie: \(movie.title), ID: \(String(describing: movie.id))")
-                    .foregroundColor(.white) // only to debug and to see the movies id
+                    .foregroundColor(.white) // Debugging line
                 Text(movie.title)
                     .font(.title)
                     .foregroundColor(.white)
                     .padding(.top, 55)
                     .bold()
                 Spacer()
-                
+
                 Text("\(movie.year)")
                     .font(.subheadline)
                     .foregroundColor(.white)
                     .padding(.bottom, 16)
-                
+
                 HStack {
                     VStack(alignment: .leading) {
-                        
                         SingleMovieCard(movie: movie)
-                        
+
                         Text("Actors: \(movie.actors)")
                             .font(.subheadline)
                             .foregroundColor(.white)
                             .padding(.bottom, 16)
-                        
-                        
+
                         Spacer()
                     }
                     .padding()
-                    
+
                     Spacer()
-                    
-                    
-                    
                 }
-                
+
                 VStack {
                     if filteredComments.isEmpty {
                         Text("No comments yet.")
@@ -73,37 +67,54 @@ struct AboutMovieView: View {
                 }
                 .background(Color.yellow)
                 .padding()
-                
-                
-                
+
+                // Comment Text Editor
                 HStack {
                     TextEditor(text: $userComment)
                         .frame(width: 250, height: 100)
-                    
+
                     Button("Save") {
                         if let movieId = movie.id, !userComment.isEmpty {
-                            // Add the comment using db
                             db.addCommentToMovie(movieId: movieId, text: userComment)
-                            
-                            // Refresh comments by calling the fetch function
                             db.fetchCommentsForMovie(movieId: movieId)
-                            
-                            // Clear the text editor
-                            userComment = ""
+                            userComment = "" // Clear text editor after saving
                         }
                     }
                     .background(Color.customRed)
                     .foregroundColor(.white)
                 }
-                
-                
+
+                // Audio Recording Button
+                HStack {
+                    Button(action: {
+                        if audioRecorder.isRecording {
+                            if let audioURL = audioRecorder.stopRecording() {
+                                db.uploadAudioToFirebase(movieId: movie.id ?? "unknown", audioURL: audioURL) { success in
+                                    print(success ? "Audio uploaded successfully." : "Failed to upload audio.")
+                                }
+                            }
+                        } else {
+                            audioRecorder.startRecording()
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: audioRecorder.isRecording ? "stop.circle" : "mic.circle")
+                            Text(audioRecorder.isRecording ? "Stop Recording" : "Record Comment")
+                        }
+                        .padding()
+                        .background(audioRecorder.isRecording ? Color.red : Color.blue)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                    }
+                }
+                .padding()
+
+                // Add to Watchlist Button
                 Button(action: {
                     isFavorized.toggle()
-                    
                     guard let movieId = movie.id else { return }
-                    
                     let watchlistMovie = movie.toWatchlistMovie()
-                    
+
                     if isFavorized {
                         db.addMovieToWatchlist(movie: watchlistMovie)
                     } else {
@@ -122,10 +133,9 @@ struct AboutMovieView: View {
                 .padding(.vertical, 5)
                 .foregroundStyle(.white)
                 .background(isFavorized ? .gray : .customRed)
-                .clipShape(.buttonBorder)
+                .clipShape(Capsule())
                 .opacity(isFavorized ? 0.7 : 1)
-                //.padding()
-                
+
                 Spacer()
             }
             .onAppear {
@@ -133,10 +143,12 @@ struct AboutMovieView: View {
                     db.fetchCommentsForMovie(movieId: movieId)
                 }
             }
-            
         }
     }
 }
+
+
+
 
 #Preview {
     AboutMovieView(movie: ApiMovie(title: "The Master Plan", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
