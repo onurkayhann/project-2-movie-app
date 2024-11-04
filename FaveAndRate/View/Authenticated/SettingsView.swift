@@ -80,6 +80,13 @@ struct SettingsView: View {
                     .clipShape(.buttonBorder)
                     .padding()
                     
+                    HStack {
+                        NavigationLink(destination: CommentsView(comments: []), label: {
+                            Image(systemName: "info.circle")
+                            Text("Comments")
+                        })
+                    }
+                    
                 }
                 
             }
