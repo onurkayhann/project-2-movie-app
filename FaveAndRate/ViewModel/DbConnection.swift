@@ -10,13 +10,11 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseStorage
 
-
 class DbConnection: ObservableObject {
     
     var db = Firestore.firestore()
     var auth = Auth.auth()
-    let storage = Storage.storage()  // Add this line to initialize Firebase Storage
-
+    let storage = Storage.storage()
     
     let COLLECTION_USER_DATA = "user_data"
     
@@ -28,151 +26,97 @@ class DbConnection: ObservableObject {
     var userDataListener: ListenerRegistration?
     
     func uploadAudioToFirebase(movieId: String, audioURL: URL, completion: @escaping (Bool) -> Void) {
-            guard let currentUser = currentUser else {
-                print("No current user found.")
+        guard let currentUser = currentUser else {
+            print("No current user found.")
+            completion(false)
+            return
+        }
+        
+        let storageRef = storage.reference()
+        let audioRef = storageRef.child("audioComments/\(movieId)/\(UUID().uuidString).m4a")
+        
+        audioRef.putFile(from: audioURL, metadata: nil) { metadata, error in
+            if let error = error {
+                print("Error uploading audio: \(error.localizedDescription)")
                 completion(false)
                 return
             }
             
-            let storageRef = storage.reference()
-            let audioRef = storageRef.child("audioComments/\(movieId)/\(UUID().uuidString).m4a")
-            
-            audioRef.putFile(from: audioURL, metadata: nil) { metadata, error in
+            audioRef.downloadURL { url, error in
                 if let error = error {
-                    print("Error uploading audio: \(error.localizedDescription)")
+                    print("Error getting download URL: \(error.localizedDescription)")
                     completion(false)
                     return
                 }
                 
-                audioRef.downloadURL { url, error in
-                    if let error = error {
-                        print("Error getting download URL: \(error.localizedDescription)")
-                        completion(false)
-                        return
-                    }
-                    
-                    if let downloadURL = url {
-                        // Save the audio comment URL in Firestore
-                        self.db.collection("movies")
-                            .document(movieId)
-                            .collection("audioComments")
-                            .addDocument(data: [
-                                "userId": currentUser.uid,
-                                "audioURL": downloadURL.absoluteString,
-                                "timestamp": Timestamp()
-                            ]) { error in
-                                if let error = error {
-                                    print("Error saving audio comment: \(error.localizedDescription)")
-                                    completion(false)
-                                } else {
-                                    print("Audio comment saved successfully!")
-                                    completion(true)
-                                }
+                if let downloadURL = url {
+                    self.db.collection("movies")
+                        .document(movieId)
+                        .collection("audioComments")
+                        .addDocument(data: [
+                            "userId": currentUser.uid,
+                            "audioURL": downloadURL.absoluteString,
+                            "timestamp": Timestamp()
+                        ]) { error in
+                            if let error = error {
+                                print("Error saving audio comment: \(error.localizedDescription)")
+                                completion(false)
+                            } else {
+                                print("Audio comment saved successfully!")
+                                completion(true)
                             }
-                    }
+                        }
                 }
             }
         }
+    }
     
     func fetchCommentsForMovie(movieId: String) {
-            db.collection("comments").whereField("movieId", isEqualTo: movieId).getDocuments { (snapshot, error) in
-                if let error = error {
-                    print("Error fetching comments: \(error)")
-                } else {
-                    self.comments = snapshot?.documents.compactMap { document in
-                        let data = document.data()
-                        let id = data["id"] as? String ?? ""
-                        let userId = data["userId"] as? String ?? ""
-                        let movieId = data["movieId"] as? String ?? ""
-                        let text = data["text"] as? String ?? ""
-                        let audioComment = data["audioURL"] as? String
-                        
-                        let type: String
-                                        if let audioComment = audioComment, !audioComment.isEmpty { // Check if audioComment is not nil and not empty
-                                            type = "audio"
-                                        } else {
-                                            type = "text"
-                                        }
-                        
-                        return MovieComment(id: id, userId: userId, movieId: movieId, text: text, audioComment: audioComment, type: type) // Ensure your MovieComment struct is updated to handle audioURL
-                    } ?? []
-                }
-            }
-        }
-    
-    /*
-    func fetchCommentsForMovie(movieId: String) {
-            guard let currentUser = currentUser else { return }
-            
-            db.collection(COLLECTION_USER_DATA)
-                .document(currentUser.uid)
-                .getDocument { [weak self] document, error in
-                    if let error = error {
-                        print("Error fetching comments: \(error.localizedDescription)")
-                        return
+        db.collection("comments").whereField("movieId", isEqualTo: movieId).getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Error fetching comments: \(error)")
+            } else {
+                self.comments = snapshot?.documents.compactMap { document in
+                    let data = document.data()
+                    let id = data["id"] as? String ?? ""
+                    let userId = data["userId"] as? String ?? ""
+                    let movieId = data["movieId"] as? String ?? ""
+                    let text = data["text"] as? String ?? ""
+                    let audioComment = data["audioURL"] as? String
+                    
+                    let type: String
+                    if let audioComment = audioComment, !audioComment.isEmpty {
+                        type = "audio"
+                    } else {
+                        type = "text"
                     }
                     
-                    if let document = document, document.exists,
-                       let data = document.data(),
-                       let commentsArray = data["comments"] as? [[String: Any]] {
-                        
-                        self?.comments = commentsArray.compactMap { dict in
-                            guard let id = dict["id"] as? String,
-                                  let userId = dict["userId"] as? String,
-                                  let movieId = dict["movieId"] as? String,
-                                  let text = dict["text"] as? String else {
-                                return nil
-                            }
-                            return MovieComment(id: id, userId: userId, movieId: movieId, text: text)
-                        }.filter { $0.movieId == movieId }
-                    }
-                }
+                    return MovieComment(id: id, userId: userId, movieId: movieId, text: text, audioComment: audioComment, type: type)
+                } ?? []
+            }
         }
-     */
-     
+    }
+    
     func addCommentToMovie(movieId: String, text: String, isAudio: Bool = false, audioComment: String? = nil) {
-            let commentId = UUID().uuidString
-            let userId = "current_user_id" // Replace with actual user ID retrieval logic
-            let comment = [
-                "id": commentId,
-                "userId": userId,
-                "movieId": movieId,
-                "text": text,
-                "type": isAudio ? "audio" : "text",
-                "audioURL": audioComment ?? "" // Only set if it's an audio comment
-            ] as [String : Any]
-            
-            db.collection("comments").document(commentId).setData(comment) { error in
-                if let error = error {
-                    print("Error adding comment: \(error)")
-                } else {
-                    self.fetchCommentsForMovie(movieId: movieId) // Refresh comments
-                }
+        let commentId = UUID().uuidString
+        let userId = "current_user_id"
+        let comment = [
+            "id": commentId,
+            "userId": userId,
+            "movieId": movieId,
+            "text": text,
+            "type": isAudio ? "audio" : "text",
+            "audioURL": audioComment ?? ""
+        ] as [String : Any]
+        
+        db.collection("comments").document(commentId).setData(comment) { error in
+            if let error = error {
+                print("Error adding comment: \(error)")
+            } else {
+                self.fetchCommentsForMovie(movieId: movieId)
             }
         }
-    /*
-    func addCommentToMovie(movieId: String, text: String) {
-        guard let currentUser = currentUser else { return }
-
-        let newComment = MovieComment(id: UUID().uuidString, userId: currentUser.uid, movieId: movieId, text: text)
-        
-        db.collection(COLLECTION_USER_DATA)
-            .document(currentUser.uid)
-            .updateData(["comments": FieldValue.arrayUnion([newComment.toDictionary()])]) { error in
-                if let error = error {
-                    print("Error adding comment: \(error.localizedDescription)")
-                } else {
-                    print("Comment successfully added.")
-                }
-            }
     }
-    */
-    /*
-    func getCommentsForMovie(movieId: String) -> [MovieComment] {
-        print("Current User Data: \(String(describing: currentUserData))")
-        return currentUserData?.movieComment?.filter { $0.movieId == movieId } ?? []
-    }
-     */
     
     func addMovieToWatchlist(movie: WatchlistMovie) {
         guard let currentUser = currentUser else { return }
@@ -190,7 +134,6 @@ class DbConnection: ObservableObject {
             .updateData(["watchlist": FieldValue.arrayRemove([movieId.toDictionary()])])
     }
     
-    //Function to register user
     func registerUser(email: String, password: String, name: String) {
         
         auth.createUser(withEmail: email, password: password) { authResult, error in
@@ -202,7 +145,6 @@ class DbConnection: ObservableObject {
             
             guard let authResult = authResult else { return }
             
-            // Lägg till newUserData
             let newUserData = UserData(name: name, watchlist: [])
             
             do {
@@ -210,43 +152,29 @@ class DbConnection: ObservableObject {
             } catch _ {
                 print("Failed to create userdata!")
             }
-            
         }
-        
-        
     }
     
-    //Function to login user
     func loginUser(email: String, password: String) {
-        
         auth.signIn(withEmail: email, password: password)
-        
     }
     
-    //Initialize listener for if the state changes
     init() {
-        
         let _ = auth.addStateDidChangeListener { auth, user in
-        
+            
             if let user = user {
                 self.currentUser = user
                 self.startUserDataListener()
-                //Add for self.watchlistListener here
                 
             } else {
                 self.currentUser = nil
                 self.userDataListener?.remove()
                 self.userDataListener = nil
                 self.currentUserData = nil
-                //Add for self.watchlist here
-                
             }
-            
         }
-        
     }
     
-    //Signout function
     func signOut() {
         do {
             try auth.signOut()
@@ -257,14 +185,10 @@ class DbConnection: ObservableObject {
         }
     }
     
-    //Add listener for example watchlist
-    
-    //Function that listens on userdata
     func startUserDataListener() {
         
         guard let currentUser = currentUser else { print("No current user found.")
             return }
-        
         
         print("Starting user data listener for user: \(currentUser.uid)")
         
@@ -283,11 +207,7 @@ class DbConnection: ObservableObject {
                     
                     print("Omvandlingsfel! Kunde inte omvandla användarens data")
                 }
-                
             }
-            
         }
     }
-    
-    
 }

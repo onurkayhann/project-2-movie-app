@@ -9,33 +9,30 @@ import SwiftUI
 import FirebaseCore
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-
-  func application(_ application: UIApplication,
-
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-
-    FirebaseApp.configure()
-
-    return true
-
-  }
-
+    
+    func application(_ application: UIApplication,
+                     
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        
+        FirebaseApp.configure()
+        
+        return true
+    }
 }
 
 
 @main
 struct FaveAndRateApp: App {
-    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     @StateObject var dbConnection = DbConnection()
-    @StateObject var movieManager = MovieManager() // Is this suppose to be StateObject? This code fixed our login issue
+    @StateObject var movieManager = MovieManager()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(dbConnection)
-                .environmentObject(movieManager) // Is this suppose to be StateObject? This code fixed our login issue
+                .environmentObject(movieManager)
         }
     }
 }

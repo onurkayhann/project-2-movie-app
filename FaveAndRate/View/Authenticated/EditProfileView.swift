@@ -50,9 +50,3 @@ struct EditProfileView: View {
 #Preview {
     EditProfileView().environmentObject(DbConnection())
 }
-
-/*
-    MARK: TODO
-    - You get navigated here from Edit Profile in SettingsView 
- 
- */

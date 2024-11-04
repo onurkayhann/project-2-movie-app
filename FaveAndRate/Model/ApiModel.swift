@@ -23,12 +23,6 @@ struct AuthResponse: Decodable {
     var message: String
 }
 
-/*
-struct MoviesWrapper: Decodable {
-    var description: [MovieEntry]
-}
- */
-
 struct MovieResponse: Codable {
     var description: [ApiMovie]
 }
@@ -52,21 +46,13 @@ struct ApiMovie: Codable, Identifiable {
         }
     }
 
-
 extension ApiMovie {
-    
     func toWatchlistMovie() -> WatchlistMovie {
         return WatchlistMovie(id: id, title: title, year: year, poster: poster, actors: actors, rank: rank)
     }
-    
 }
 
-// Ahmads förslag?
 struct SingleMovie: Decodable {
     var id: String?
     var name: String
-    
 }
-
-//Make a new struct to use for user adding movies/series to FireStore
-    
