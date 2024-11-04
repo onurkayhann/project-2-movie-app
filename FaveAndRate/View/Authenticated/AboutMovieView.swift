@@ -62,7 +62,7 @@ struct AboutMovieView: View {
                         Text("No comments yet.")
                             .foregroundColor(.gray)
                     } else {
-                        CommentsView(comments: filteredComments)
+                        CommentsView(comments: filteredComments).environmentObject(audioRecorder)
                     }
                 }
                 .background(Color.yellow)
@@ -90,7 +90,11 @@ struct AboutMovieView: View {
                         if audioRecorder.isRecording {
                             if let audioURL = audioRecorder.stopRecording() {
                                 db.uploadAudioToFirebase(movieId: movie.id ?? "unknown", audioURL: audioURL) { success in
-                                    print(success ? "Audio uploaded successfully." : "Failed to upload audio.")
+                                    if success {
+                                        db.addCommentToMovie(movieId: movie.id ?? "unknown", text: "", isAudio: true, audioComment: audioURL.absoluteString)
+                                    } else {
+                                        print("Failed to upload audio.")
+                                    }
                                 }
                             }
                         } else {

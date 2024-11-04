@@ -13,6 +13,7 @@ struct UserData: Codable {
     var watchlist: [WatchlistMovie]
     var movieComment: [MovieComment]?
     
+    
 }
 
 struct WatchlistMovie: Codable, Identifiable {
@@ -48,6 +49,8 @@ struct MovieComment: Codable, Identifiable {
     var userId: String
     var movieId: String
     var text: String
+    var audioComment: String?
+    var type: String
 }
 
 extension MovieComment {
