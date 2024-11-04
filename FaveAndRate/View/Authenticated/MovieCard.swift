@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MovieCard: View {
+    
     var movie: ApiMovie
     
     @EnvironmentObject var db: DbConnection
@@ -22,7 +23,6 @@ struct MovieCard: View {
                         Color(.black.opacity(0.2))
                         
                         VStack(spacing: 20) {
-                            
                             HStack {
                                 Button(action: {
                                     print("You clicked the button")
@@ -41,7 +41,13 @@ struct MovieCard: View {
                                     print(isFavorized)
                                     
                                 }, label: {
-                                    Image(systemName: isFavorized ? "checkmark.rectangle.portrait.fill" : "plus.rectangle.portrait").resizable().background(.gray.opacity(0.6)).frame(width: 24, height: 30, alignment: .center).foregroundStyle(.white).padding(.leading, -2).padding(.top, -2)
+                                    Image(systemName: isFavorized ? "checkmark.rectangle.portrait.fill" : "plus.rectangle.portrait")
+                                        .resizable()
+                                        .background(Color.gray.opacity(0.6))
+                                        .frame(width: 24, height: 30)
+                                        .foregroundStyle(.white)
+                                        .padding(.leading, -2)
+                                        .padding(.top, -2)
                                 })
                                 Spacer()
                             }
@@ -53,29 +59,28 @@ struct MovieCard: View {
                     }
                 })
             }, placeholder: {
-                
                 VStack {
                     Text("Loading...").foregroundStyle(.black)
-                }.background(.gray)
-                
-            }).frame(width: 150, height: 200, alignment: .center).clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .background(Color.gray)
+            })
+            .frame(width: 150, height: 200)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.gray)
-                    .frame(width: 150, height: 50)
-                
-                Rectangle()
-                    .fill(Color.gray)
-                    .frame(width: 150, height: 25)
-                    .offset(y: -12.5)
+                    .fill(.customRed)
+                    .frame(width: 150, height: 70)
+                    .background(.customRed)
                 
                 Text(movie.title)
-                    .foregroundStyle(.black)
+                    .frame(width: 150)
+                    .foregroundStyle(.white)
                     .multilineTextAlignment(.center)
-                    .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 8)
+                    .padding(.top, 4)
+                    .padding(.bottom, 6)
             }
             .padding(.top, -8)
         }
