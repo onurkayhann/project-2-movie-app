@@ -17,11 +17,39 @@ class DbConnection: ObservableObject {
     let COLLECTION_USER_DATA = "user_data"
     
     @Published var movies: [ApiMovie] = []
-    
+    @Published var comments: [MovieComment] = []
     @Published var currentUser: User?
     @Published var currentUserData: UserData?
     
     var userDataListener: ListenerRegistration?
+    
+    func fetchCommentsForMovie(movieId: String) {
+            guard let currentUser = currentUser else { return }
+            
+            db.collection(COLLECTION_USER_DATA)
+                .document(currentUser.uid)
+                .getDocument { [weak self] document, error in
+                    if let error = error {
+                        print("Error fetching comments: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    if let document = document, document.exists,
+                       let data = document.data(),
+                       let commentsArray = data["comments"] as? [[String: Any]] {
+                        
+                        self?.comments = commentsArray.compactMap { dict in
+                            guard let id = dict["id"] as? String,
+                                  let userId = dict["userId"] as? String,
+                                  let movieId = dict["movieId"] as? String,
+                                  let text = dict["text"] as? String else {
+                                return nil
+                            }
+                            return MovieComment(id: id, userId: userId, movieId: movieId, text: text)
+                        }.filter { $0.movieId == movieId }
+                    }
+                }
+        }
     
     func addCommentToMovie(movieId: String, text: String) {
         guard let currentUser = currentUser else { return }
@@ -39,11 +67,12 @@ class DbConnection: ObservableObject {
             }
     }
     
-    
+    /*
     func getCommentsForMovie(movieId: String) -> [MovieComment] {
         print("Current User Data: \(String(describing: currentUserData))")
         return currentUserData?.movieComment?.filter { $0.movieId == movieId } ?? []
     }
+     */
     
     func addMovieToWatchlist(movie: WatchlistMovie) {
         guard let currentUser = currentUser else { return }

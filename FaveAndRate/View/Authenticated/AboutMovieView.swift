@@ -16,12 +16,8 @@ struct AboutMovieView: View {
     @State var userComment = ""
     
     var filteredComments: [MovieComment] {
-        guard let movieId = movie.id else {
-                print("Error: movie.id is nil")
-                return [] // Return an empty array if movie.id is nil
-            }
-        let comments = db.getCommentsForMovie(movieId: movie.id ?? "")
-        print("Filtered comments for movie \(movie.id ?? "unknown"): \(comments)") // Debugging line
+        let comments = db.comments.filter { $0.movieId == movie.id }
+        print("Filtered comments for movie \(movie.id ?? "unknown"): \(comments)")
         return comments
     }
     
@@ -33,7 +29,7 @@ struct AboutMovieView: View {
             
             VStack {
                 Text("Current Movie: \(movie.title), ID: \(String(describing: movie.id))")
-                                .foregroundColor(.white) // only to debug and to see the movies id
+                    .foregroundColor(.white) // only to debug and to see the movies id
                 Text(movie.title)
                     .font(.title)
                     .foregroundColor(.white)
@@ -48,7 +44,7 @@ struct AboutMovieView: View {
                 
                 HStack {
                     VStack(alignment: .leading) {
-                                                
+                        
                         SingleMovieCard(movie: movie)
                         
                         Text("Actors: \(movie.actors)")
@@ -68,25 +64,36 @@ struct AboutMovieView: View {
                 }
                 
                 VStack {
-                    
-                    CommentsView(comments: filteredComments)
+                    if filteredComments.isEmpty {
+                        Text("No comments yet.")
+                            .foregroundColor(.gray)
+                    } else {
+                        CommentsView(comments: filteredComments)
+                    }
                 }
-                .background(.yellow)
+                .background(Color.yellow)
+                .padding()
                 
                 
                 
                 HStack {
-                    TextEditor(text: $userComment).frame(width: 250, height: 100)
+                    TextEditor(text: $userComment)
+                        .frame(width: 250, height: 100)
+                    
                     Button("Save") {
-                        guard let movieId = movie.id, !userComment.isEmpty else { return }
-                        
-                        // Call the function to add the comment
-                        db.addCommentToMovie(movieId: movieId, text: userComment)
-                        
-                        // Clear the text editor after saving
-                        userComment = ""
+                        if let movieId = movie.id, !userComment.isEmpty {
+                            // Add the comment using db
+                            db.addCommentToMovie(movieId: movieId, text: userComment)
+                            
+                            // Refresh comments by calling the fetch function
+                            db.fetchCommentsForMovie(movieId: movieId)
+                            
+                            // Clear the text editor
+                            userComment = ""
+                        }
                     }
-                    .background(.customRed).foregroundStyle(.white)
+                    .background(Color.customRed)
+                    .foregroundColor(.white)
                 }
                 
                 
@@ -121,7 +128,12 @@ struct AboutMovieView: View {
                 
                 Spacer()
             }
-
+            .onAppear {
+                if let movieId = movie.id {
+                    db.fetchCommentsForMovie(movieId: movieId)
+                }
+            }
+            
         }
     }
 }
