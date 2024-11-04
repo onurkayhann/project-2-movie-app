@@ -12,7 +12,6 @@ struct SettingsView: View {
     @EnvironmentObject var db: DbConnection
     
     var body: some View {
-        
         NavigationStack {
             VStack {
                 Text("Settings")
@@ -55,7 +54,7 @@ struct SettingsView: View {
                         Text("Dark Mode")
                         // Toggle(isOn: <#T##Binding<Bool>#>, label: <#T##() -> Label#>)
                     }
-                                        
+                    
                     HStack {
                         
                         Image(systemName: "rectangle.portrait.and.arrow.forward")
@@ -79,18 +78,8 @@ struct SettingsView: View {
                     .background(.customRed)
                     .clipShape(.buttonBorder)
                     .padding()
-                    
-                    HStack {
-                        NavigationLink(destination: CommentsView(comments: []), label: {
-                            Image(systemName: "info.circle")
-                            Text("Comments")
-                        })
-                    }
-                    
                 }
-                
             }
-            
         }
     }
 }
@@ -98,10 +87,3 @@ struct SettingsView: View {
 #Preview {
     SettingsView().environmentObject(DbConnection()).environmentObject(MovieManager())
 }
-
-/*
-    MARK: TODO
-    - Maybe move SettingsView outside TabView or maybe move out About?
-    - Do we really want Dark Mode/Light Mode toggle in here?
-    - Decide which Logout function/or Button we will use
-*/

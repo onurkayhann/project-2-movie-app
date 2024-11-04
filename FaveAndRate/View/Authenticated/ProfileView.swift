@@ -12,9 +12,7 @@ struct ProfileView: View {
     @EnvironmentObject var db: DbConnection
     @EnvironmentObject var movieManager: MovieManager
     
-    
     var body: some View {
-        
         VStack {
             AsyncImage(url: URL(string: "https://www.shutterstock.com/shutterstock/photos/1009320268/display_1500/stock-vector-movie-time-vector-illustration-cinema-poster-concept-on-red-round-background-composition-with-1009320268.jpg"), content: { image in
                 image
@@ -35,7 +33,6 @@ struct ProfileView: View {
         
         VStack(spacing: 10) {
             
-            
             VStack(alignment: .leading) {
                 Text("Your Watchlist").padding(.horizontal, 10).foregroundStyle(.customRed)
                     .font(.title3)
@@ -53,9 +50,7 @@ struct ProfileView: View {
                                 }
                             }
                         }
-                        
                     }
-                    
                 }
             }
             VStack(alignment: .leading) {
@@ -77,9 +72,7 @@ struct ProfileView: View {
                                 }
                             }
                         }
-                        
                     }
-                    
                 }
             }
         }
@@ -89,11 +82,3 @@ struct ProfileView: View {
 #Preview {
     ProfileView().environmentObject(DbConnection()).environmentObject(MovieManager())
 }
-
-
-/*
- MARK: TODO
- - add settings icon and navigation
- - create SettingsView
- 
- */

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MovieCard: View {
-    
     var movie: ApiMovie
     
     @EnvironmentObject var db: DbConnection
@@ -16,9 +15,7 @@ struct MovieCard: View {
     @State var isFavorized = false
     
     var body: some View {
-    
         VStack {
-            
             AsyncImage(url: URL(string: movie.poster), content: { poster in
                 poster.resizable().overlay(alignment: .bottom, content: {
                     ZStack {
@@ -34,7 +31,6 @@ struct MovieCard: View {
                                     guard let movieId = movie.id else { return }
                                     
                                     let watchlistMovie = movie.toWatchlistMovie()
-                                    //db.addMovieToWatchlist(movie: WatchlistMovie)
                                     
                                     if isFavorized {
                                         db.addMovieToWatchlist(movie: watchlistMovie)
@@ -44,18 +40,12 @@ struct MovieCard: View {
                                     
                                     print(isFavorized)
                                     
-                                    
                                 }, label: {
                                     Image(systemName: isFavorized ? "checkmark.rectangle.portrait.fill" : "plus.rectangle.portrait").resizable().background(.gray.opacity(0.6)).frame(width: 24, height: 30, alignment: .center).foregroundStyle(.white).padding(.leading, -2).padding(.top, -2)
                                 })
-                                
                                 Spacer()
                             }
-                            
-                            
                             Spacer()
-                            
-                            //Text(movie.title).bold().font(.title3).foregroundStyle(.white)
                             
                         }.onAppear {
                             isFavorized = self.db.currentUserData?.watchlist.contains { $0.id == movie.id } ?? false
@@ -75,7 +65,6 @@ struct MovieCard: View {
                     .fill(Color.gray)
                     .frame(width: 150, height: 50)
                 
-                
                 Rectangle()
                     .fill(Color.gray)
                     .frame(width: 150, height: 25)
@@ -84,26 +73,15 @@ struct MovieCard: View {
                 Text(movie.title)
                     .foregroundStyle(.black)
                     .multilineTextAlignment(.center)
-                            .lineLimit(nil) // Allows multiple lines
-                            .fixedSize(horizontal: false, vertical: true) // Expands vertically
-                            .padding(.horizontal, 8)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 8)
             }
             .padding(.top, -8)
-            
-            
-            
         }
-        
     }
 }
 
 #Preview {
     MovieCard(movie: ApiMovie(title: "The Master Plan Bla Bla Bla", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
 }
-
-/*
-
-    MARK: TODOS
-    - make a new separate moviecard without the gray rectangle and the movie name
- 
-*/

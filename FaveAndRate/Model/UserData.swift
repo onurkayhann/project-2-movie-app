@@ -8,12 +8,9 @@
 import Foundation
 
 struct UserData: Codable {
-
     var name: String
     var watchlist: [WatchlistMovie]
     var movieComment: [MovieComment]?
-    
-    
 }
 
 struct WatchlistMovie: Codable, Identifiable {
@@ -26,16 +23,15 @@ struct WatchlistMovie: Codable, Identifiable {
     var rank: Int
     
     func toDictionary() -> [String: Any] {
-            return [
-                "id": id ?? "",
-                "title": title,
-                "year": year ?? 0,
-                "poster": poster,
-                "actors": actors,
-                "rank": rank
-            ]
-        }
-    
+        return [
+            "id": id ?? "",
+            "title": title,
+            "year": year ?? 0,
+            "poster": poster,
+            "actors": actors,
+            "rank": rank
+        ]
+    }
 }
 
 extension WatchlistMovie {

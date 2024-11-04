@@ -8,7 +8,6 @@
 import Foundation
 
 class MovieManager: ObservableObject {
-    
     let api = Api()
     
     @Published var movies: [ApiMovie] = []
@@ -27,19 +26,14 @@ class MovieManager: ObservableObject {
     }
     
     func getMovies() async throws {
-        
-        
         let retrievedMovies: MovieResponse = try await api.get(url: "\(BASE_URL)/search?q=jönssonligan")
         
         DispatchQueue.main.async {
             self.movies = retrievedMovies.description
         }
-        
     }
     
     func searchMovies() async throws {
-        
-        
         guard !userInput.isEmpty else {
             
             DispatchQueue.main.async {
@@ -56,7 +50,6 @@ class MovieManager: ObservableObject {
         }
     }
     
-    // Ahmads förslag?
     func getMovieById(id: String) async throws {
         
         let retrievedMovies: MovieResponse = try await api.get(url: "\(BASE_URL)/search?tt=\(id)")
@@ -67,6 +60,6 @@ class MovieManager: ObservableObject {
     }
     
     func getWatchlist(by id: String) -> ApiMovie? {
-            return movies.first { $0.id == id }
-        }
+        return movies.first { $0.id == id }
+    }
 }

@@ -16,7 +16,6 @@ struct LoginView: View {
     var body: some View {
         VStack {
             
-            //App logo
             Image("fave-and-rate-logo")
             Text("Login").font(.largeTitle).bold()
             
@@ -35,12 +34,10 @@ struct LoginView: View {
                 
                 
                 Button("Login", action: {
-                    //Checking if @ is in the user input
                     guard emailInput.contains("@") else {
                         print("Invalid email type: @ is missing")
                         return
                     }
-                    //Login function
                     db.loginUser(email: emailInput, password: passwordInput)
                 })
                 .bold()
@@ -52,12 +49,9 @@ struct LoginView: View {
                 .clipShape(.buttonBorder)
                 .padding()
                 
-                //Navigates to RegisterView
                 NavigationLink(destination: RegisterView(), label: {
                     Text("Don't have an account? Register").foregroundStyle(.black).padding().underline()
                 })
-                
-                
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

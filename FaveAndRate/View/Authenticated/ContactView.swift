@@ -11,7 +11,7 @@ import MapKit
 struct ContactView: View {
     
     let locationManager = LocationManager()
-
+    
     @State var nameInput = ""
     @State var phoneNumberInput = ""
     @State var messageInput = ""
@@ -58,42 +58,36 @@ struct ContactView: View {
             
         }
         
-        
         ZStack {
-            
             Map(position: $position) {
                 
-                
                 Annotation("", coordinate: CLLocationCoordinate2D(latitude: office.location.latitude, longitude: office.location.longitude)) {
-                                    
-                                    Button(action: {
-                                        print("\(office.name) pressed!")
-                                        
-                                        if self.selectedOffice?.id == office.id {
-                                            self.selectedOffice = nil
-                                        } else {
-                                            self.selectedOffice = office
-                                        }
-                                    }) {
-                                        VStack {
-                                            Circle()
-                                                .foregroundStyle(.red)
-                                                .frame(width: 20, height: 20, alignment: .center)
-                                            Text(office.name)
-                                                .font(.system(size: 12))
-                                                .foregroundStyle(.black)
-                                        }
-                                    }
-                                }
+                    
+                    Button(action: {
+                        print("\(office.name) pressed!")
+                        
+                        if self.selectedOffice?.id == office.id {
+                            self.selectedOffice = nil
+                        } else {
+                            self.selectedOffice = office
+                        }
+                    }) {
+                        VStack {
+                            Circle()
+                                .foregroundStyle(.red)
+                                .frame(width: 20, height: 20, alignment: .center)
+                            Text(office.name)
+                                .font(.system(size: 12))
+                                .foregroundStyle(.black)
+                        }
+                    }
+                }
             }.mapControls {
                 MapUserLocationButton()
                 MapPitchToggle()
             }
             
-
-            
             VStack {
-                
                 Spacer()
                 
                 if let selectedOffice = selectedOffice {
@@ -108,9 +102,6 @@ struct ContactView: View {
                             .clipShape(.buttonBorder)
                     })
                 }
-                
-                
-                
             }
             
         }.frame(width: 250, height: 150, alignment: .center).clipShape(RoundedRectangle(cornerRadius: 10))

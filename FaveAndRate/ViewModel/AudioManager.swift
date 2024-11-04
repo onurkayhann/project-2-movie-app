@@ -13,25 +13,27 @@ import AVFoundation
 class AudioManager: ObservableObject {
     
     private var audioRecorder: AVAudioRecorder?
+    
     var audioPlayer: AVAudioPlayer?
-        @Published var isRecording = false
+    
+    @Published var isRecording = false
     
     func requestMicrophoneAccess(completion: @escaping (Bool) -> Void) {
-            switch AVAudioSession.sharedInstance().recordPermission {
-            case .granted:
-                completion(true) // Permission already granted
-            case .denied:
-                completion(false) // Permission denied
-            case .undetermined:
-                AVAudioSession.sharedInstance().requestRecordPermission { granted in
-                    DispatchQueue.main.async {
-                        completion(granted)
-                    }
+        switch AVAudioSession.sharedInstance().recordPermission {
+        case .granted:
+            completion(true)
+        case .denied:
+            completion(false)
+        case .undetermined:
+            AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                DispatchQueue.main.async {
+                    completion(granted)
                 }
-            default:
-                completion(false) // Handle unexpected cases
             }
+        default:
+            completion(false)
         }
+    }
     
     func playAudio(url: URL) {
         if FileManager.default.fileExists(atPath: url.path) {
@@ -49,7 +51,6 @@ class AudioManager: ObservableObject {
         }
     }
     
-        
     func startRecording() {
         let audioFilename = getDocumentsDirectory().appendingPathComponent("audioComment.m4a")
         let settings = [
@@ -63,36 +64,33 @@ class AudioManager: ObservableObject {
             audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
             audioRecorder?.record()
             isRecording = true
-            print("Recording started at: \(audioFilename.path)") // Log the recording start path
+            print("Recording started at: \(audioFilename.path)")
         } catch {
             print("Failed to start recording: \(error.localizedDescription)")
         }
     }
-        
+    
     func stopRecording() -> URL? {
         audioRecorder?.stop()
         isRecording = false
         let url = audioRecorder?.url
-        print("Audio file saved at: \(url?.path ?? "No URL")") // Log the saved audio URL
+        print("Audio file saved at: \(url?.path ?? "No URL")")
         return url
     }
-        
-        private func getDocumentsDirectory() -> URL {
-            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            return paths[0]
-        }
+    
+    private func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
     
     func recordAndPlayAudio() {
         let audioURL = getDocumentsDirectory().appendingPathComponent("audioComment.m4a")
         startRecording()
-        // Call stopRecording at some later point, maybe through a button press
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { // Example of stopping after 5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             if let recordedURL = self.stopRecording() {
                 print("Recording stopped, file saved at: \(recordedURL)")
-                self.playAudio(url: recordedURL) // Play the recorded audio
+                self.playAudio(url: recordedURL)
             }
         }
     }
-    
-    
 }

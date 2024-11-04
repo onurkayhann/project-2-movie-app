@@ -8,7 +8,6 @@
 import Foundation
 
 class Api {
-    
     func get<R: Decodable>(url: String) async throws -> R {
         
         guard let url = URL(string: url) else { throw APIErrors.invalidURL }
@@ -33,18 +32,13 @@ class Api {
             
             throw APIErrors.invalidData
         }
-        
     }
-    
-    
 }
 
 //error handler
 enum APIErrors: Error {
-    
     case invalidURL
     case invalidResponse
     case invalidData
     case invalidRequest
-    
 }

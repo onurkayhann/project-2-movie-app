@@ -9,14 +9,9 @@ import SwiftUI
 import Firebase
 
 struct ContentView: View {
-    
     @EnvironmentObject var db: DbConnection
     
     var body: some View {
-        
-        // checks if user is logged in or not
-        // when logged in -> tabView is visible
-        
         if db.currentUser != nil {
             TabView {
                 NavigationStack {
@@ -35,7 +30,7 @@ struct ContentView: View {
                 
                 NavigationStack {
                     AboutView()
-                        
+                    
                 }
                 .tabItem {
                     Label("About", systemImage: "info.circle")
@@ -66,10 +61,3 @@ struct ContentView: View {
 #Preview {
     ContentView().environmentObject(DbConnection()).environmentObject(MovieManager())
 }
-
-
-/*
-    MARK: TODOS
-    - Don't forget to remove all the spaces between code blocks and inside code blocks
- 
- */

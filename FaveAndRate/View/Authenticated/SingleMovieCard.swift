@@ -15,18 +15,13 @@ struct SingleMovieCard: View {
     @State var isFavorized = false
     
     var body: some View {
-    
         VStack {
-            
             AsyncImage(url: URL(string: movie.poster), content: { poster in
                 poster.resizable().overlay(alignment: .bottom, content: {
                     ZStack {
                         Color(.black.opacity(0.2))
-                        
                         VStack(spacing: 20) {
-                            
                             Spacer()
-                                                        
                         }.onAppear {
                             isFavorized = self.db.currentUserData?.watchlist.contains { $0.id == movie.id } ?? false
                         }
@@ -39,9 +34,7 @@ struct SingleMovieCard: View {
                 }.background(.gray)
                 
             }).frame(width: 150, height: 200, alignment: .center).clipShape(RoundedRectangle(cornerRadius: 10))
-
         }
-        
     }
 }
 
