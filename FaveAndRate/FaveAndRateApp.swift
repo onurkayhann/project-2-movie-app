@@ -27,12 +27,14 @@ struct FaveAndRateApp: App {
     
     @StateObject var dbConnection = DbConnection()
     @StateObject var movieManager = MovieManager()
+    @StateObject var audioManager = AudioManager()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(dbConnection)
                 .environmentObject(movieManager)
+                .environmentObject(audioManager)
         }
     }
 }
