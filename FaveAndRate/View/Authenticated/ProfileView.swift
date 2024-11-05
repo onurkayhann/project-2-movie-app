@@ -56,7 +56,7 @@ struct ProfileView: View {
                 }
             }
             VStack(alignment: .leading) {
-                Text("Watchlist").padding(.horizontal, 10).foregroundStyle(.customRed)
+                Text("Suggested Movies").padding(.horizontal, 10).foregroundStyle(.customRed)
                     .font(.title3)
                     .bold()
                 if movieManager.movies.isEmpty {
@@ -67,13 +67,24 @@ struct ProfileView: View {
                         HStack(spacing: 15) {
                             
                             if let watchlist = db.currentUserData?.watchlist {
-                                ForEach(watchlist) { watchlistMovie in
+                                ForEach(movieManager.suggestedMovies) { watchlistMovie in
                                     
-                                    MovieCard(movie: watchlistMovie.toApiMovie())
+                                    NavigationLink(destination: AboutMovieView(movie: watchlistMovie)) {
+                                        MovieCard(movie: watchlistMovie)
+                                    }
                                     
                                 }
                             }
                         }
+                    }
+                }
+            }
+            .onAppear {
+                Task {
+                    do {
+                        try await movieManager.suggestedMovies()
+                    } catch {
+                        print("Error fetching movies: \(error)")
                     }
                 }
             }
