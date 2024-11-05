@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app requires access to the microphone to record audio comments.</string>
+	<string>We want your mic</string>
 </dict>
 </plist>

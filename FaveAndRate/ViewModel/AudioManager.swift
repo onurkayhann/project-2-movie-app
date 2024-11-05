@@ -1,31 +1,25 @@
-//
-//  AudioManage.swift
-//  FaveAndRate
-//
-//  Created by Hampus Andersson on 2024-11-04.
-//
-
 import Foundation
 import FirebaseFirestore
 import FirebaseStorage
 import AVFoundation
 
 class AudioManager: ObservableObject {
-    
     private var audioRecorder: AVAudioRecorder?
-    
     var audioPlayer: AVAudioPlayer?
     
     @Published var isRecording = false
-    
+    private var audioFilename: URL?
+
+    // Request microphone access
     func requestMicrophoneAccess(completion: @escaping (Bool) -> Void) {
-        switch AVAudioSession.sharedInstance().recordPermission {
+        let audioSession = AVAudioSession.sharedInstance()
+        switch audioSession.recordPermission {
         case .granted:
             completion(true)
         case .denied:
             completion(false)
         case .undetermined:
-            AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            audioSession.requestRecordPermission { granted in
                 DispatchQueue.main.async {
                     completion(granted)
                 }
@@ -34,64 +28,78 @@ class AudioManager: ObservableObject {
             completion(false)
         }
     }
-    
+
+    // Start recording audio
+    func startRecording() {
+        let audioSession = AVAudioSession.sharedInstance()
+        switch audioSession.recordPermission {
+        case .granted:
+            beginRecording()
+        case .denied:
+            print("Microphone access denied")
+        case .undetermined:
+            audioSession.requestRecordPermission { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        self.beginRecording()
+                    } else {
+                        print("Microphone access denied by user")
+                    }
+                }
+            }
+        @unknown default:
+            break
+        }
+    }
+
+    private func beginRecording() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.playAndRecord, mode: .default)
+            try audioSession.setActive(true)
+            
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let id = UUID().uuidString
+            audioFilename = documentsDirectory.appendingPathComponent("comment-\(id).m4a")
+            
+            let settings: [String: Any] = [
+                AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                AVSampleRateKey: 12000,
+                AVNumberOfChannelsKey: 1,
+                AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+            ]
+            
+            audioRecorder = try AVAudioRecorder(url: audioFilename!, settings: settings)
+            audioRecorder?.record()
+            isRecording = true
+            print("Recording started, saving to: \(audioFilename!.path)")
+        } catch {
+            print("Failed to start recording: \(error.localizedDescription)")
+        }
+    }
+
+    // Stop recording audio
+    func stopRecording() -> URL? {
+        audioRecorder?.stop()
+        isRecording = false
+        let recordedURL = audioFilename
+        print("Recording stopped. File saved at: \(recordedURL?.path ?? "No URL")")
+        return recordedURL
+    }
+
+    // Play audio from a URL
     func playAudio(url: URL) {
         if FileManager.default.fileExists(atPath: url.path) {
-            print("File exists, proceeding to play audio. \(url.path())")
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
                 audioPlayer?.prepareToPlay()
                 audioPlayer?.play()
                 print("Audio is playing successfully.")
             } catch {
-                print("Error playing audio: \(error)")
+                print("Error playing audio: \(error.localizedDescription)")
             }
         } else {
             print("File does not exist at path: \(url.path)")
-        }
-    }
-    
-    func startRecording() {
-        let id = UUID().uuidString
-        let audioFilename = getDocumentsDirectory().appendingPathComponent("comment-\(id).m4a")
-        let settings = [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.medium.rawValue
-        ]
-        
-        do {
-            audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
-            audioRecorder?.record()
-            isRecording = true
-            print("Recording started at: \(audioFilename.path)")
-        } catch {
-            print("Failed to start recording: \(error.localizedDescription)")
-        }
-    }
-    
-    func stopRecording() -> URL? {
-        audioRecorder?.stop()
-        isRecording = false
-        let url = audioRecorder?.url
-        print("Audio file saved at: \(url?.path ?? "No URL")")
-        return url
-    }
-    
-    private func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
-        return paths[0]
-    }
-    
-    func recordAndPlayAudio() {
-        let audioURL = getDocumentsDirectory().appendingPathComponent("audioComment.m4a")
-        startRecording()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            if let recordedURL = self.stopRecording() {
-                print("Recording stopped, file saved at: \(recordedURL)")
-                self.playAudio(url: recordedURL)
-            }
         }
     }
 }
