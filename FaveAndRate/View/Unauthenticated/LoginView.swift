@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginView: View {
     @State var emailInput: String = ""
     @State var passwordInput: String = ""
+    @State var errorMessage: String?
     
     @EnvironmentObject var db: DbConnection
     
@@ -32,14 +33,28 @@ struct LoginView: View {
                     .textInputAutocapitalization(.never)
                     .padding(.horizontal, 30)
                 
+                if let errorMessage = errorMessage {
+                                    Text(errorMessage)
+                                        .foregroundColor(.logout)
+                                        .padding(.horizontal, 30)
+                                        .padding(.top, -10)
+                                }
                 
-                Button("Login", action: {
+                
+                Button("Login") {
                     guard emailInput.contains("@") else {
-                        print("Invalid email type: @ is missing")
+                        errorMessage = "Invalid attempt! Must include @"
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                            errorMessage = nil
+                        }
+                        
                         return
                     }
+                    
+                    errorMessage = nil
                     db.loginUser(email: emailInput, password: passwordInput)
-                })
+                }
                 .bold()
                 .padding()
                 .padding(.horizontal, 25)

@@ -14,6 +14,7 @@ struct RegisterView: View {
     @State var emailInput = ""
     @State var passwordInput = ""
     @State var confirmPasswordInput = ""
+    @State var errorMessage: String?
     
     var body: some View {
         VStack {
@@ -46,15 +47,21 @@ struct RegisterView: View {
                     .textInputAutocapitalization(.never)
                     .padding(.horizontal, 30)
                 
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.logout)
+                        .padding(.horizontal, 30)
+                        .padding(.top, -10)
+                }
                 
                 Button("Register", action: {
                     
                     guard emailInput.contains("@") else {
-                        print("Invalid email type: @ is missing")
+                        displayError("Invalid attempt! Must include @")
                         return
                     }
                     guard passwordInput == confirmPasswordInput else {
-                        print("Password don't match")
+                        displayError("Password don't match")
                         return
                     }
                     
@@ -76,6 +83,13 @@ struct RegisterView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
+    
+    private func displayError(_ message: String) {
+           errorMessage = message
+           DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+               errorMessage = nil
+           }
+       }
 }
 
 #Preview {
