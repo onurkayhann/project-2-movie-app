@@ -17,11 +17,12 @@ struct MovieCard: View {
             AsyncImage(url: URL(string: movie.poster ?? "No poster"), content: { poster in
                 poster
                     .resizable()
-                    .overlay(alignment: .bottom, content: {
+                    .frame(width: 150, height: 200)
+                    .overlay(alignment: .topLeading, content: {
                         ZStack {
-                            Color(.black.opacity(0.2))
+                            Color.black.opacity(0.2)
                             
-                            VStack(spacing: 20) {
+                            VStack {
                                 HStack {
                                     Button(action: {
                                         print("You clicked the button")
@@ -37,70 +38,63 @@ struct MovieCard: View {
                                             db.removeMovieFromWatchlist(movieId: watchlistMovie)
                                         }
                                         
-                                        print(isFavorized)
-                                        
                                     }, label: {
                                         Image(systemName: isFavorized ? "checkmark.rectangle.portrait.fill" : "plus.rectangle.portrait")
                                             .resizable()
-                                            .background(Color.gray.opacity(0.6))
                                             .frame(width: 24, height: 30)
                                             .foregroundStyle(.white)
-                                            .padding(.leading, -2)
-                                            .padding(.top, -2)
+                                            .clipShape(RoundedCornersShape(corners: [.topLeft], radius: 10))
                                     })
                                     Spacer()
                                 }
                                 Spacer()
-                                
-                            }.onAppear {
-                                isFavorized = self.db.currentUserData?.watchlist.contains { $0.id == movie.id } ?? false
                             }
                         }
+                        .frame(width: 150, height: 200)
                     })
             }, placeholder: {
                 VStack {
                     Text("Loading...").foregroundStyle(.black)
                 }
+                .frame(width: 150, height: 200)
                 .background(Color.gray)
             })
-            .frame(width: 150, height: 200)
             .clipShape(RoundedCornersShape(corners: [.topLeft, .topRight], radius: 10))
             
-            ZStack {
-                RoundedCornersShape(corners: [.bottomLeft, .bottomRight], radius: 10)
-                    .fill(Color.customRed)
-                    .fill(Color.black.opacity(0.2))
-                    .frame(width: 150, height: 70)
-                
-                
-                Rectangle()
-                    .fill(Color.customRed)
-                    .fill(Color.black.opacity(0.2))
-                    .frame(width: 150, height: 25)
-                    .offset(y: -12.5)
-                
-                Text(movie.title)
-                    .frame(width: 150)
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 8)
-                    .padding(.top, 4)
-                    .padding(.bottom, 6)
+            GeometryReader { geometry in
+                ZStack {
+                    RoundedCornersShape(corners: [.bottomLeft, .bottomRight], radius: 10)
+                        .fill(Color.customRed)
+                        .fill(Color.black.opacity(0.2))
+                    
+                    Text(movie.title)
+                        .foregroundStyle(.white)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.5)
+                        .padding(.horizontal, 8)
+                }
+                .frame(width: 150, height: geometry.size.height)
+                .background(Color.black.opacity(0.2))
             }
+            .frame(width: 150, height: 50, alignment: .top)
         }
+        .frame(width: 150)
     }
 }
 
 #Preview {
-    MovieCard(movie: ApiMovie(title: "The Master Plan Bla Bla Bla", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
+    MovieCard(movie: ApiMovie(title: "The Master Plan Bla Bla Bla", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251))
+        .environmentObject(DbConnection())
 }
+
+
 
 // Make own File of this?
 struct RoundedCornersShape: Shape {
     var corners: UIRectCorner
     var radius: CGFloat
-
+    
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         return Path(path.cgPath)
