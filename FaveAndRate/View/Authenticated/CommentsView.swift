@@ -18,7 +18,7 @@ struct CommentsView: View {
                 ForEach(comments, id: \.id) { comment in
                     VStack(alignment: .leading) {
                         // User ID
-                        Text(comment.userId)
+                        Text(comment.username) // Change this line to display the user's name
                             .font(.headline)
                             .padding(.bottom, 2)
                         
@@ -69,9 +69,9 @@ struct CommentsView: View {
     let audioManager = AudioManager()
     
     CommentsView(comments: [
-        MovieComment(id: UUID().uuidString, userId: "User1", movieId: "Movie1", text: "Great movie!", audioComment: nil, type: "text"),
-        MovieComment(id: UUID().uuidString, userId: "User2", movieId: "Movie1", text: "I really enjoyed this film.", audioComment: nil, type: "text"),
-        MovieComment(id: UUID().uuidString, userId: "User3", movieId: "Movie1", text: "", audioComment: "https://example.com/audio1.m4a", type: "audio")
+        MovieComment(id: UUID().uuidString, userId: "User1", movieId: "Movie1", text: "Great movie!", audioComment: nil, type: "text", username: ""),
+        MovieComment(id: UUID().uuidString, userId: "User2", movieId: "Movie1", text: "I really enjoyed this film.", audioComment: nil, type: "text", username: ""),
+        MovieComment(id: UUID().uuidString, userId: "User3", movieId: "Movie1", text: "", audioComment: "https://example.com/audio1.m4a", type: "audio", username: "")
     ], movieTitle: "movietitle")
     .environmentObject(audioManager) // This line adds AudioManager to the environment
 }
