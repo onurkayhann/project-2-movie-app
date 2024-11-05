@@ -47,6 +47,7 @@ struct MovieComment: Codable, Identifiable {
     var text: String
     var audioComment: String?
     var type: String
+    var username: String
 }
 
 extension MovieComment {

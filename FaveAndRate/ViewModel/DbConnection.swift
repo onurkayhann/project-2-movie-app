@@ -80,51 +80,100 @@ class DbConnection: ObservableObject {
     }
     
     func fetchCommentsForMovie(movieId: String) {
-        db.collection("comments").whereField("movieId", isEqualTo: movieId).getDocuments { (snapshot, error) in
+        db.collection("user_data").getDocuments { (snapshot, error) in
             if let error = error {
-                print("Error fetching comments: \(error)")
-            } else {
-                self.comments = snapshot?.documents.compactMap { document in
-                    let data = document.data()
-                    let id = data["id"] as? String ?? ""
-                    let userId = data["userId"] as? String ?? ""
-                    let movieId = data["movieId"] as? String ?? ""
-                    let text = data["text"] as? String ?? ""
-                    let audioComment = data["audioURL"] as? String
-                    
-                    let type: String
-                    if let audioComment = audioComment, !audioComment.isEmpty {
-                        type = "audio"
+                print("Error fetching users: \(error)")
+                return
+            }
+
+            var allComments: [MovieComment] = []
+            let dispatchGroup = DispatchGroup()
+
+            for document in snapshot!.documents {
+                let userId = document.documentID
+                dispatchGroup.enter()
+                
+                self.db.collection("user_data").document(userId).collection("comments")
+                    .whereField("movieId", isEqualTo: movieId).getDocuments { (commentSnapshot, error) in
+                        
+                    if let error = error {
+                        print("Error fetching comments for user \(userId): \(error)")
                     } else {
-                        type = "text"
+                        for commentDocument in commentSnapshot!.documents {
+                            let data = commentDocument.data()
+                            
+                            let id = data["id"] as? String ?? ""
+                            let movieId = data["movieId"] as? String ?? ""
+                            let text = data["text"] as? String ?? ""
+                            let userId = data["userId"] as? String ?? ""
+                            let audioURL = data["audioURL"] as? String // Capture audio URL if it exists
+                            let userName = document.data()["name"] as? String ?? "Unknown User"
+                            
+                            print("Fetched \(commentSnapshot?.documents.count ?? 0) comments for user \(userId)")
+
+
+                            let movieComment = MovieComment(id: id, userId: userId, movieId: movieId, text: text, audioComment: audioURL, type: audioURL != nil ? "audio" : "text", username: userName)
+                            allComments.append(movieComment)
+                        }
                     }
-                    
-                    return MovieComment(id: id, userId: userId, movieId: movieId, text: text, audioComment: audioComment, type: type)
-                } ?? []
+                    dispatchGroup.leave()
+                }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                self.comments = allComments // Update the comments list
             }
         }
     }
+
+
     
     func addCommentToMovie(movieId: String, text: String, isAudio: Bool = false, audioComment: String? = nil) {
+        guard let currentUser = currentUser else { return }
+
         let commentId = UUID().uuidString
-        let userId = "current_user_id"
+        
+        // Determine the type of comment
+        let commentType: String
+        let commentText: String
+
+        if isAudio, let audioURL = audioComment {
+            commentType = "audio"
+            commentText = "" // We don't need text for audio comments
+        } else {
+            commentType = "text"
+            commentText = text
+        }
+
+        // Create the comment
         let comment = [
             "id": commentId,
-            "userId": userId,
             "movieId": movieId,
-            "text": text,
-            "type": isAudio ? "audio" : "text",
-            "audioURL": audioComment ?? ""
+            "text": commentText,
+            "userId": currentUser.uid,
+            "name": self.currentUserData?.name ?? "Unknown User", // Get user name
+            "type": commentType,
+            "audioComment": isAudio ? audioComment ?? "" : nil // Store audio comment if applicable
         ] as [String : Any]
-        
-        db.collection("comments").document(commentId).setData(comment) { error in
-            if let error = error {
-                print("Error adding comment: \(error)")
-            } else {
-                self.fetchCommentsForMovie(movieId: movieId)
+
+        // Add comment to user's comments sub-collection
+        db.collection("user_data")
+            .document(currentUser.uid)
+            .collection("comments")
+            .document(commentId)
+            .setData(comment) { error in
+                if let error = error {
+                    print("Error adding comment: \(error)")
+                } else {
+                    print("Comment added successfully!")
+                    self.fetchCommentsForMovie(movieId: movieId)
+                }
             }
-        }
     }
+
+
+
+
     
     func addMovieToWatchlist(movie: WatchlistMovie) {
         guard let currentUser = currentUser else { return }
