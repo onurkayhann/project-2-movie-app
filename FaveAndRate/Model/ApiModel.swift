@@ -32,7 +32,7 @@ struct ApiMovie: Codable, Identifiable {
         var id: String?
         var title: String
         var year: Int?
-        var poster: String
+        var poster: String?
         var actors: String
         var rank: Int
         
@@ -48,7 +48,7 @@ struct ApiMovie: Codable, Identifiable {
 
 extension ApiMovie {
     func toWatchlistMovie() -> WatchlistMovie {
-        return WatchlistMovie(id: id, title: title, year: year, poster: poster, actors: actors, rank: rank)
+        return WatchlistMovie(id: id, title: title, year: year, poster: poster ?? "No poster", actors: actors, rank: rank)
     }
 }
 

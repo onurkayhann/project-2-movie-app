@@ -16,7 +16,7 @@ struct SingleMovieCard: View {
     
     var body: some View {
         VStack {
-            AsyncImage(url: URL(string: movie.poster), content: { poster in
+            AsyncImage(url: URL(string: movie.poster ?? "No poster"), content: { poster in
                 poster.resizable().overlay(alignment: .bottom, content: {
                     ZStack {
                         Color(.black.opacity(0.2))
