@@ -2,8 +2,12 @@ import SwiftUI
 
 struct CommentsView: View {
     var comments: [MovieComment]
+    
+    var movieId: String
     var movieTitle: String
-    @EnvironmentObject var audioManager: AudioManager // Reference to the audio manager
+    
+    @EnvironmentObject var dbConnection: DbConnection
+    @EnvironmentObject var audioManager: AudioManager
     
     var body: some View {
         ScrollView {
@@ -17,51 +21,59 @@ struct CommentsView: View {
                 // Loop through comments
                 ForEach(comments, id: \.id) { comment in
                     VStack(alignment: .leading) {
-                        // User ID
-                        Text(comment.username) // Change this line to display the user's name
+
+                        // Display the user's name or user ID
+                        Text(comment.username)
                             .font(.headline)
                             .padding(.bottom, 2)
                         
-                        // Comment text or audio button
+                        // Display text or audio comment based on type
                         if comment.type == "text" {
                             Text(comment.text)
                                 .font(.body)
                                 .padding(.bottom, 8)
-                                .padding(10) // Padding inside the comment box
-                                .background(Color.gray.opacity(0.2)) // Light gray background for text comments
-                                .cornerRadius(10) // Rounded corners for the comment box
-                        } else if comment.type == "audio", let audioURL = comment.audioComment {
+                                .padding(10)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                        } else if comment.type == "audio", let audioURL = comment.audioComment, !audioURL.isEmpty {
+                            // Display audio button for audio comments
                             Button(action: {
                                 if let url = URL(string: audioURL) {
                                     audioManager.playAudio(url: url)
                                 }
                             }) {
                                 HStack {
-                                    Image(systemName: "play.circle.fill") // Icon for the play button
+                                    Image(systemName: "play.circle.fill")
                                         .font(.title)
                                     Text("Play Audio Comment")
                                         .font(.body)
                                 }
                                 .foregroundColor(.blue)
                                 .padding(10)
-                                .background(Color.gray.opacity(0.2)) // Light gray background for audio button
+                                .background(Color.gray.opacity(0.2))
                                 .cornerRadius(10)
                             }
                             .padding(.bottom, 8)
+                        } else {
+                            Text("No comment available")
+                                .foregroundColor(.gray)
+                                .italic()
+                                .padding(10)
                         }
                         
-                        // Divider for separation
                         Divider()
                             .background(Color.gray)
                     }
                     .padding(.vertical, 5)
-                    .padding(.horizontal) // Padding for each comment card // Darker background for comments
-                    .cornerRadius(12) // Rounded corners for the comment card
+                    .padding(.horizontal)
+                    .cornerRadius(12)
                 }
             }
             .padding() // Padding for the entire view
-            .edgesIgnoringSafeArea(.all) // Make the background cover the entire screen
         }
+        .onAppear {
+                   dbConnection.fetchCommentsForMovie(movieId: movieId)
+               }
     }
 }
 
@@ -72,6 +84,6 @@ struct CommentsView: View {
         MovieComment(id: UUID().uuidString, userId: "User1", movieId: "Movie1", text: "Great movie!", audioComment: nil, type: "text", username: ""),
         MovieComment(id: UUID().uuidString, userId: "User2", movieId: "Movie1", text: "I really enjoyed this film.", audioComment: nil, type: "text", username: ""),
         MovieComment(id: UUID().uuidString, userId: "User3", movieId: "Movie1", text: "", audioComment: "https://example.com/audio1.m4a", type: "audio", username: "")
-    ], movieTitle: "movietitle")
+    ], movieId: "movieId", movieTitle: "movietitle")
     .environmentObject(audioManager) // This line adds AudioManager to the environment
 }
