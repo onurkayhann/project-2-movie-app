@@ -58,26 +58,14 @@ struct SettingsView: View {
                     HStack {
                         
                         Image(systemName: "rectangle.portrait.and.arrow.forward")
-                            .foregroundStyle(.red)
+                            .foregroundStyle(.logout)
                         Text("Logout")
-                            .foregroundStyle(.red)
+                            .foregroundStyle(.logout)
                         
                     }.onTapGesture {
                         db.signOut()
                     }
-                    
-                    Button("Logout", action: {
-                        //Signing out
-                        db.signOut()
-                    })
-                    .bold()
-                    .padding()
-                    .padding(.horizontal, 25)
-                    .padding(.vertical, 5)
-                    .foregroundStyle(.white)
-                    .background(.customRed)
-                    .clipShape(.buttonBorder)
-                    .padding()
+
                 }
             }
         }
