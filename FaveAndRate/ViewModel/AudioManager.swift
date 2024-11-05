@@ -37,14 +37,14 @@ class AudioManager: ObservableObject {
     
     func playAudio(url: URL) {
         if FileManager.default.fileExists(atPath: url.path) {
-            print("File exists, proceeding to play audio.")
+            print("File exists, proceeding to play audio. \(url.path())")
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
                 audioPlayer?.prepareToPlay()
                 audioPlayer?.play()
                 print("Audio is playing successfully.")
             } catch {
-                print("Error playing audio: \(error.localizedDescription)")
+                print("Error playing audio: \(error)")
             }
         } else {
             print("File does not exist at path: \(url.path)")
@@ -52,12 +52,13 @@ class AudioManager: ObservableObject {
     }
     
     func startRecording() {
-        let audioFilename = getDocumentsDirectory().appendingPathComponent("audioComment.m4a")
+        let id = UUID().uuidString
+        let audioFilename = getDocumentsDirectory().appendingPathComponent("comment-\(id).m4a")
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
             AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+            AVEncoderAudioQualityKey: AVAudioQuality.medium.rawValue
         ]
         
         do {
@@ -79,7 +80,7 @@ class AudioManager: ObservableObject {
     }
     
     private func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
         return paths[0]
     }
     

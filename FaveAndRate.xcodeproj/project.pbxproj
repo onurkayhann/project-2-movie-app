@@ -433,7 +433,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FaveAndRate/Preview Content\"";
-				DEVELOPMENT_TEAM = UN6KB94738;
+				DEVELOPMENT_TEAM = 752WHTWUWS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please give us your location";
@@ -464,7 +464,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FaveAndRate/Preview Content\"";
-				DEVELOPMENT_TEAM = UN6KB94738;
+				DEVELOPMENT_TEAM = 752WHTWUWS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please give us your location";
