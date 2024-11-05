@@ -15,10 +15,15 @@ struct HomeView: View {
     
     var body: some View {
         VStack {
-            Text("Welcome ").font(.title) + Text(db.currentUserData?.name ?? "No user found")
-                .foregroundStyle(.customRed)
-                .font(.title)
-                .bold()
+            HStack(spacing: 0) {
+                Text("Welcome ").font(.title)
+                Text(db.currentUserData?.name ?? "No user found")
+                    .foregroundStyle(.customRed)
+                    .font(.title)
+                    .bold()
+            }
+            .padding(.top, 30)
+            
             
             Spacer()
             
@@ -26,10 +31,12 @@ struct HomeView: View {
             Text("Some Movie Series you may like")
                 .font(.headline)
                 .padding(.top)
+                .frame(alignment: .center)
             
+            //Text("Harry Potter")
+                .frame(maxWidth: .infinity, alignment: .leading)
             ScrollView(.horizontal) {
                 VStack(alignment: .leading) {
-                    Text("Harry Potter")
                     HStack(spacing: 15) {
                         ForEach(movieManager.topRankedMovies) { movie in
                             NavigationLink(destination: AboutMovieView(movie: movie)) {
@@ -40,9 +47,10 @@ struct HomeView: View {
                 }
             }
             
+            //Text("Lord of the Rings")
+                .frame(maxWidth: .infinity, alignment: .leading)
             ScrollView(.horizontal) {
                 VStack(alignment: .leading) {
-                    Text("Lord of the Rings")
                     HStack(spacing: 15) {
                         ForEach(movieManager.upcomingMovies) { movie in
                             NavigationLink(destination: AboutMovieView(movie: movie)) {

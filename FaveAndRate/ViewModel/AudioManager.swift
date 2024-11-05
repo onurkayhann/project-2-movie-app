@@ -35,6 +35,23 @@ class AudioManager: ObservableObject {
         }
     }
     
+    func downloadAudioAndPlay(urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        let storage = Storage.storage()
+        let storageRef = storage.reference(forURL: url.absoluteString)
+        
+        storageRef.write(toFile: getDocumentsDirectory().appendingPathComponent("downloadedAudio.m4a")) { localURL, error in
+            if let error = error {
+                print("Error downloading audio: \(error.localizedDescription)")
+                return
+            }
+            
+            if let localURL = localURL {
+                self.playAudio(url: localURL)
+            }
+        }
+    }
+    
     func playAudio(url: URL) {
         if FileManager.default.fileExists(atPath: url.path) {
             print("File exists, proceeding to play audio.")
