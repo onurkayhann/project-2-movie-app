@@ -39,7 +39,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0DA07D302CD8F2EC0050BC8A /* Exceptions for "FaveAndRate" folder in "FaveAndRate" target */ = {
+		0D2EEABC2CDA553D00E18134 /* Exceptions for "FaveAndRate" folder in "FaveAndRate" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -52,7 +52,7 @@
 		485A231E2CC283EB00DEFFAF /* FaveAndRate */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0DA07D302CD8F2EC0050BC8A /* Exceptions for "FaveAndRate" folder in "FaveAndRate" target */,
+				0D2EEABC2CDA553D00E18134 /* Exceptions for "FaveAndRate" folder in "FaveAndRate" target */,
 			);
 			path = FaveAndRate;
 			sourceTree = "<group>";
@@ -433,11 +433,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FaveAndRate/Preview Content\"";
-				DEVELOPMENT_TEAM = UN6KB94738;
+				DEVELOPMENT_TEAM = 752WHTWUWS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FaveAndRate/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please give us your location";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio comments.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We want your mic";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -464,11 +465,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FaveAndRate/Preview Content\"";
-				DEVELOPMENT_TEAM = UN6KB94738;
+				DEVELOPMENT_TEAM = 752WHTWUWS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FaveAndRate/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please give us your location";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio comments.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We want your mic";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

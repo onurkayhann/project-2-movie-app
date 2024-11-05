@@ -32,6 +32,14 @@ class DbConnection: ObservableObject {
             return
         }
         
+        if FileManager.default.fileExists(atPath: audioURL.path) {
+                    print("File exists at path: \(audioURL.path)")
+                } else {
+                    print("File does not exist at path: \(audioURL.path)")
+                    completion(false)
+                    return
+                }
+        
         let storageRef = storage.reference()
         let audioRef = storageRef.child("audioComments/\(movieId)/\(UUID().uuidString).m4a")
         
