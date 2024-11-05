@@ -15,13 +15,10 @@ struct AboutMovieView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color.black.ignoresSafeArea().opacity(0.92)
-            
+        
             VStack {
                 Text(movie.title)
                     .font(.title)
-                    .foregroundColor(.white)
                     .padding(.top, 55)
                     .bold()
                 Spacer()
@@ -37,45 +34,28 @@ struct AboutMovieView: View {
                         SingleMovieCard(movie: movie)
                         Text("Actors: \(movie.actors)")
                             .font(.subheadline)
-                            .foregroundColor(.white)
                             .padding(.bottom, 16)
                         Spacer()
                     }
                     .padding()
+                    Text("This is a deafult description text")
                     Spacer()
-                }
-                
-                // Comments Section
-                VStack {
-                    if filteredComments.isEmpty {
-                        Text("No comments yet.")
-                            .foregroundColor(.gray)
-                    } else {
-                        CommentsView(comments: filteredComments)
-                            .environmentObject(audioRecorder)
-                    }
-                }
-                .background(Color.yellow)
-                .padding()
-                
-                // Comment and Recording Section
-                HStack {
-                    TextEditor(text: $userComment)
-                        .frame(width: 250, height: 100)
                     
-                    Button("Save") {
-                        if let movieId = movie.id, !userComment.isEmpty {
-                            db.addCommentToMovie(movieId: movieId, text: userComment)
-                            db.fetchCommentsForMovie(movieId: movieId)
-                            userComment = ""
-                        }
-                    }
-                    .background(Color.customRed)
-                    .foregroundColor(.white)
+                    
                 }
                 
-                // Audio Recording Button
+                // Buttons for Comments and Recording
                 HStack {
+                    NavigationLink(destination: CommentsView(comments: filteredComments, movieTitle: movie.title)) {
+                        Text("View Comments")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.customRed) // Adjust color as needed
+                            .cornerRadius(8)
+                    }
+                    .padding(.trailing, 8) // Add spacing between buttons
+                    
                     Button(action: {
                         if audioRecorder.isRecording {
                             if let audioURL = audioRecorder.stopRecording() {
@@ -101,7 +81,33 @@ struct AboutMovieView: View {
                         .clipShape(Capsule())
                     }
                 }
-                .padding()
+                .padding(.bottom, 16) // Padding for the bottom of the HStack
+                
+                // Comment and Recording Section
+                HStack {
+                    TextEditor(text: $userComment)
+                        .frame(width: 250, height: 100)
+                        .overlay(
+                                    RoundedRectangle(cornerRadius: 8) // Same corner radius for the border
+                                        .stroke(Color.gray, lineWidth: 1) // Border color and width
+                                )
+                    
+                    Button("Save") {
+                        if let movieId = movie.id, !userComment.isEmpty {
+                            db.addCommentToMovie(movieId: movieId, text: userComment)
+                            db.fetchCommentsForMovie(movieId: movieId)
+                            userComment = ""
+                        }
+                    }
+                    .bold()
+                    .padding()
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 1)
+                    .foregroundStyle(.white)
+                    .background(.customRed)
+                    .clipShape(.buttonBorder)
+
+                }
                 
                 // Watchlist Button
                 Button(action: {
@@ -137,6 +143,10 @@ struct AboutMovieView: View {
                     db.fetchCommentsForMovie(movieId: movieId)
                 }
             }
-        }
+        
     }
+}
+
+#Preview {
+    AboutMovieView(movie: ApiMovie(title: "The Master Plan", year: 2015, poster: "https://m.media-amazon.com/images/M/MV5BMTQ2NzQzMTcwM15BMl5BanBnXkFtZTgwNjY3NjI1MzE@._V1_.jpg", actors: "John Doe", rank: 251)).environmentObject(DbConnection())
 }
