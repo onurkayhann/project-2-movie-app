@@ -21,37 +21,37 @@ struct SettingsView: View {
                 List() {
                     HStack {
                         NavigationLink(destination: EditProfileView(), label: {
-                            Image(systemName: "person.circle")
-                            Text("Edit Profile")
+                            Image(systemName: "person.circle").foregroundStyle(.customBlack)
+                            Text("Edit Profile").foregroundStyle(.customBlack)
                         })
                         
                     }
                     
                     HStack {
                         NavigationLink(destination: ProfileView(), label: {
-                            Image(systemName: "plus.rectangle.portrait")
-                            Text("Your Watchlist")
+                            Image(systemName: "plus.rectangle.portrait").foregroundStyle(.customBlack)
+                            Text("Your Watchlist").foregroundStyle(.customBlack)
                         })
                         
                     }
                     
                     HStack {
                         NavigationLink(destination: AboutView(), label: {
-                            Image(systemName: "info.circle")
-                            Text("About Us")
+                            Image(systemName: "info.circle").foregroundStyle(.customBlack)
+                            Text("About Us").foregroundStyle(.customBlack)
                         })
                     }
                     
                     HStack {
                         NavigationLink(destination: ContactView(), label: {
-                            Image(systemName: "envelope")
-                            Text("Contact")
+                            Image(systemName: "envelope").foregroundStyle(.customBlack)
+                            Text("Contact").foregroundStyle(.customBlack)
                         })
                     }
                     
                     HStack {
-                        Image(systemName: "moon")
-                        Text("Dark Mode")
+                        Image(systemName: "moon").foregroundStyle(.customBlack)
+                        Text("Dark Mode").foregroundStyle(.customBlack)
                         // Toggle(isOn: <#T##Binding<Bool>#>, label: <#T##() -> Label#>)
                     }
                     
