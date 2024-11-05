@@ -17,7 +17,7 @@ struct LoginView: View {
         VStack {
             
             Image("fave-and-rate-logo")
-            Text("Login").font(.largeTitle).bold()
+            Text("Login").font(.largeTitle).bold().foregroundStyle(.customBlack)
             
             VStack {
                 TextField("Email", text: $emailInput)
@@ -50,7 +50,10 @@ struct LoginView: View {
                 .padding()
                 
                 NavigationLink(destination: RegisterView(), label: {
-                    Text("Don't have an account? Register").foregroundStyle(.black).padding().underline()
+                    Text("Don't have an account? Register")
+                        .foregroundStyle(.customBlack)
+                        .padding()
+                        .underline()
                 })
             }
         }

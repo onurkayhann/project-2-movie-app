@@ -15,6 +15,7 @@ class MovieManager: ObservableObject {
     
     @Published var upcomingMovies: [ApiMovie] = []
     @Published var topRankedMovies: [ApiMovie] = []
+    @Published var suggestedMovies: [ApiMovie] = []
     
     let BASE_URL = "https://imdb.iamidiotareyoutoo.com"
     
@@ -51,6 +52,15 @@ class MovieManager: ObservableObject {
         
         DispatchQueue.main.async {
             self.upcomingMovies = retrievedMovies.description
+        }
+        
+    }
+    
+    func suggestedMovies() async throws {
+        let retrievedMovies: MovieResponse = try await api.get(url: "\(BASE_URL)/search?q=scream")
+        
+        DispatchQueue.main.async {
+            self.suggestedMovies = retrievedMovies.description
         }
         
     }

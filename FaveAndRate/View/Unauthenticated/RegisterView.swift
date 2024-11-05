@@ -19,7 +19,7 @@ struct RegisterView: View {
         VStack {
             
             Image("fave-and-rate-logo")
-            Text("Register").font(.largeTitle).bold()
+            Text("Register").font(.largeTitle).bold().foregroundStyle(.customBlack)
             
             VStack {
                 TextField("Name", text: $nameInput)
@@ -70,7 +70,7 @@ struct RegisterView: View {
                 .padding()
                 
                 NavigationLink(destination: LoginView(), label: {
-                    Text("Already have an account?").foregroundStyle(.black).padding().underline()
+                    Text("Already have an account?").foregroundStyle(.customBlack).padding().underline()
                 })
             }
         }

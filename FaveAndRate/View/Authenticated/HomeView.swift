@@ -16,7 +16,7 @@ struct HomeView: View {
     var body: some View {
         VStack {
             HStack(spacing: 0) {
-                Text("Welcome ").font(.title)
+                Text("Welcome ").font(.title).foregroundStyle(.customBlack)
                 Text(db.currentUserData?.name ?? "No user found")
                     .foregroundStyle(.customRed)
                     .font(.title)
