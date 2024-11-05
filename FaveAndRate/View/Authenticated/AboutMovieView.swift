@@ -46,7 +46,7 @@ struct AboutMovieView: View {
                 
                 // Buttons for Comments and Recording
                 HStack {
-                    NavigationLink(destination: CommentsView(comments: filteredComments, movieTitle: movie.title)) {
+                    NavigationLink(destination: CommentsView(comments: filteredComments, movieId: movie.id ?? "No movie id", movieTitle: movie.title)) {
                         Text("View Comments")
                             .font(.headline)
                             .foregroundColor(.white)

@@ -101,18 +101,20 @@ class DbConnection: ObservableObject {
                     } else {
                         for commentDocument in commentSnapshot!.documents {
                             let data = commentDocument.data()
-                            
+
                             let id = data["id"] as? String ?? ""
                             let movieId = data["movieId"] as? String ?? ""
                             let text = data["text"] as? String ?? ""
                             let userId = data["userId"] as? String ?? ""
-                            let audioURL = data["audioURL"] as? String // Capture audio URL if it exists
+                            let audioURL = data["audioComment"] as? String // This captures the audio URL
                             let userName = document.data()["name"] as? String ?? "Unknown User"
-                            
-                            print("Fetched \(commentSnapshot?.documents.count ?? 0) comments for user \(userId)")
 
+                            // Instead of checking for audioURL here, use the "type" field
+                            let type = data["type"] as? String ?? "text"  // The type is already stored in Firestore
 
-                            let movieComment = MovieComment(id: id, userId: userId, movieId: movieId, text: text, audioComment: audioURL, type: audioURL != nil ? "audio" : "text", username: userName)
+                            print("Fetched (commentSnapshot?.documents.count ?? 0) comments for user (userId)")
+
+                            let movieComment = MovieComment(id: id, userId: userId, movieId: movieId, text: text, audioComment: audioURL, type: type, username: userName)
                             allComments.append(movieComment)
                         }
                     }
@@ -125,6 +127,7 @@ class DbConnection: ObservableObject {
             }
         }
     }
+
 
 
     
