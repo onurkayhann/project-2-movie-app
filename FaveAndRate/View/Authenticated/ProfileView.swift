@@ -46,7 +46,9 @@ struct ProfileView: View {
                             
                             if let watchlist = db.currentUserData?.watchlist {
                                 ForEach(watchlist) { watchlistMovie in
-                                    MovieCard(movie: watchlistMovie.toApiMovie())
+                                    NavigationLink(destination: AboutMovieView(movie: watchlistMovie.toApiMovie())) {
+                                        MovieCard(movie: watchlistMovie.toApiMovie())
+                                    }
                                 }
                             }
                         }
