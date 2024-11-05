@@ -73,5 +73,5 @@ struct CommentsView: View {
         MovieComment(id: UUID().uuidString, userId: "User2", movieId: "Movie1", text: "I really enjoyed this film.", audioComment: nil, type: "text"),
         MovieComment(id: UUID().uuidString, userId: "User3", movieId: "Movie1", text: "", audioComment: "https://example.com/audio1.m4a", type: "audio")
     ], movieTitle: "movietitle")
-    .environmentObject(audioManager)
+    .environmentObject(audioManager) // This line adds AudioManager to the environment
 }
