@@ -85,11 +85,11 @@ struct ProfileView: View {
                             }
                         }
                     }
-                    .padding(.bottom, 20) // Padding to avoid overlap with TabView
+                    .padding(.bottom, 20)
                 }
                 .padding()
             }
-            .background(Color.white) // Ensures a white background for the content area
+            
         }
         .onAppear {
             Task {
