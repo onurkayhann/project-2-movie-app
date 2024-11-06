@@ -88,9 +88,6 @@ struct MovieCard: View {
         .environmentObject(DbConnection())
 }
 
-
-
-// Make own File of this?
 struct RoundedCornersShape: Shape {
     var corners: UIRectCorner
     var radius: CGFloat

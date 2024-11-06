@@ -33,12 +33,12 @@ class DbConnection: ObservableObject {
         }
         
         if FileManager.default.fileExists(atPath: audioURL.path) {
-                    print("File exists at path: \(audioURL.path)")
-                } else {
-                    print("File does not exist at path: \(audioURL.path)")
-                    completion(false)
-                    return
-                }
+            print("File exists at path: \(audioURL.path)")
+        } else {
+            print("File does not exist at path: \(audioURL.path)")
+            completion(false)
+            return
+        }
         
         let storageRef = storage.reference()
         let audioRef = storageRef.child("audioComments/\(movieId)/\(UUID().uuidString).m4a")
@@ -85,10 +85,10 @@ class DbConnection: ObservableObject {
                 print("Error fetching users: \(error)")
                 return
             }
-
+            
             var allComments: [MovieComment] = []
             let dispatchGroup = DispatchGroup()
-
+            
             for document in snapshot!.documents {
                 let userId = document.documentID
                 dispatchGroup.enter()
@@ -96,70 +96,63 @@ class DbConnection: ObservableObject {
                 self.db.collection("user_data").document(userId).collection("comments")
                     .whereField("movieId", isEqualTo: movieId).getDocuments { (commentSnapshot, error) in
                         
-                    if let error = error {
-                        print("Error fetching comments for user \(userId): \(error)")
-                    } else {
-                        for commentDocument in commentSnapshot!.documents {
-                            let data = commentDocument.data()
-
-                            let id = data["id"] as? String ?? ""
-                            let movieId = data["movieId"] as? String ?? ""
-                            let text = data["text"] as? String ?? ""
-                            let userId = data["userId"] as? String ?? ""
-                            let audioURL = data["audioComment"] as? String // This captures the audio URL
-                            let userName = document.data()["name"] as? String ?? "Unknown User"
-
-                            // Instead of checking for audioURL here, use the "type" field
-                            let type = data["type"] as? String ?? "text"  // The type is already stored in Firestore
-
-                            print("Fetched (commentSnapshot?.documents.count ?? 0) comments for user (userId)")
-
-                            let movieComment = MovieComment(id: id, userId: userId, movieId: movieId, text: text, audioComment: audioURL, type: type, username: userName)
-                            allComments.append(movieComment)
+                        if let error = error {
+                            print("Error fetching comments for user \(userId): \(error)")
+                        } else {
+                            for commentDocument in commentSnapshot!.documents {
+                                let data = commentDocument.data()
+                                
+                                let id = data["id"] as? String ?? ""
+                                let movieId = data["movieId"] as? String ?? ""
+                                let text = data["text"] as? String ?? ""
+                                let userId = data["userId"] as? String ?? ""
+                                let audioURL = data["audioComment"] as? String
+                                let userName = document.data()["name"] as? String ?? "Unknown User"
+                                
+                                let type = data["type"] as? String ?? "text"
+                                
+                                print("Fetched (commentSnapshot?.documents.count ?? 0) comments for user (userId)")
+                                
+                                let movieComment = MovieComment(id: id, userId: userId, movieId: movieId, text: text, audioComment: audioURL, type: type, username: userName)
+                                allComments.append(movieComment)
+                            }
                         }
+                        dispatchGroup.leave()
                     }
-                    dispatchGroup.leave()
-                }
             }
-
+            
             dispatchGroup.notify(queue: .main) {
-                self.comments = allComments // Update the comments list
+                self.comments = allComments
             }
         }
     }
-
-
-
     
     func addCommentToMovie(movieId: String, text: String, isAudio: Bool = false, audioComment: String? = nil) {
         guard let currentUser = currentUser else { return }
-
+        
         let commentId = UUID().uuidString
         
-        // Determine the type of comment
         let commentType: String
         let commentText: String
-
+        
         if isAudio, let audioURL = audioComment {
             commentType = "audio"
-            commentText = "" // We don't need text for audio comments
+            commentText = ""
         } else {
             commentType = "text"
             commentText = text
         }
-
-        // Create the comment
+        
         let comment = [
             "id": commentId,
             "movieId": movieId,
             "text": commentText,
             "userId": currentUser.uid,
-            "name": self.currentUserData?.name ?? "Unknown User", // Get user name
+            "name": self.currentUserData?.name ?? "Unknown User",
             "type": commentType,
-            "audioComment": isAudio ? audioComment ?? "" : nil // Store audio comment if applicable
+            "audioComment": isAudio ? audioComment ?? "" : nil
         ] as [String : Any]
-
-        // Add comment to user's comments sub-collection
+        
         db.collection("user_data")
             .document(currentUser.uid)
             .collection("comments")
@@ -173,10 +166,10 @@ class DbConnection: ObservableObject {
                 }
             }
     }
-
-
-
-
+    
+    
+    
+    
     
     func addMovieToWatchlist(movie: WatchlistMovie) {
         guard let currentUser = currentUser else { return }

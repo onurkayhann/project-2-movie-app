@@ -24,16 +24,13 @@ struct HomeView: View {
             }
             .padding(.top, 30)
             
-            
             Spacer()
             
-            // Display Top Ranked Movies
             Text("Some Movie Series you may like")
                 .font(.headline)
                 .padding(.top)
                 .frame(alignment: .center)
             
-            //Text("Harry Potter")
                 .frame(maxWidth: .infinity, alignment: .leading)
             ScrollView(.horizontal) {
                 VStack(alignment: .leading) {
@@ -47,8 +44,7 @@ struct HomeView: View {
                 }
             }
             
-            //Text("Lord of the Rings")
-                .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             ScrollView(.horizontal) {
                 VStack(alignment: .leading) {
                     HStack(spacing: 15) {
@@ -74,7 +70,6 @@ struct HomeView: View {
         }
     }
 }
-
 
 #Preview {
     HomeView().environmentObject(DbConnection()).environmentObject(MovieManager())

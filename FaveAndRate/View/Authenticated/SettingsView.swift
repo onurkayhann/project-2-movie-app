@@ -65,7 +65,6 @@ struct SettingsView: View {
                     }.onTapGesture {
                         db.signOut()
                     }
-
                 }
             }
         }
