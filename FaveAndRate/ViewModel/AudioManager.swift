@@ -9,8 +9,7 @@ class AudioManager: ObservableObject {
     
     @Published var isRecording = false
     private var audioFilename: URL?
-
-    // Request microphone access
+    
     func requestMicrophoneAccess(completion: @escaping (Bool) -> Void) {
         let audioSession = AVAudioSession.sharedInstance()
         switch audioSession.recordPermission {
@@ -28,8 +27,7 @@ class AudioManager: ObservableObject {
             completion(false)
         }
     }
-
-    // Start recording audio
+    
     func startRecording() {
         let audioSession = AVAudioSession.sharedInstance()
         switch audioSession.recordPermission {
@@ -51,7 +49,7 @@ class AudioManager: ObservableObject {
             break
         }
     }
-
+    
     private func beginRecording() {
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -77,8 +75,7 @@ class AudioManager: ObservableObject {
             print("Failed to start recording: \(error.localizedDescription)")
         }
     }
-
-    // Stop recording audio
+    
     func stopRecording() -> URL? {
         audioRecorder?.stop()
         isRecording = false
@@ -86,8 +83,7 @@ class AudioManager: ObservableObject {
         print("Recording stopped. File saved at: \(recordedURL?.path ?? "No URL")")
         return recordedURL
     }
-
-    // Play audio from a URL
+    
     func playAudio(url: URL) {
         if FileManager.default.fileExists(atPath: url.path) {
             do {

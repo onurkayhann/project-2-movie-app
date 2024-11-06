@@ -12,22 +12,18 @@ struct CommentsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                // Movie title at the top
                 Text(movieTitle)
                     .font(.title2)
                     .padding(.bottom, 10)
-                    .padding(.top, 20) // Add top padding to the title
+                    .padding(.top, 20)
                 
-                // Loop through comments
                 ForEach(comments, id: \.id) { comment in
                     VStack(alignment: .leading) {
-
-                        // Display the user's name or user ID
+                        
                         Text(comment.username)
                             .font(.headline)
                             .padding(.bottom, 2)
                         
-                        // Display text or audio comment based on type
                         if comment.type == "text" {
                             Text(comment.text)
                                 .font(.body)
@@ -36,7 +32,6 @@ struct CommentsView: View {
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(10)
                         } else if comment.type == "audio", let audioURL = comment.audioComment, !audioURL.isEmpty {
-                            // Display audio button for audio comments
                             Button(action: {
                                 if let url = URL(string: audioURL) {
                                     audioManager.playAudio(url: url)
@@ -69,11 +64,11 @@ struct CommentsView: View {
                     .cornerRadius(12)
                 }
             }
-            .padding() // Padding for the entire view
+            .padding()
         }
         .onAppear {
-                   dbConnection.fetchCommentsForMovie(movieId: movieId)
-               }
+            dbConnection.fetchCommentsForMovie(movieId: movieId)
+        }
     }
 }
 
@@ -85,5 +80,5 @@ struct CommentsView: View {
         MovieComment(id: UUID().uuidString, userId: "User2", movieId: "Movie1", text: "I really enjoyed this film.", audioComment: nil, type: "text", username: ""),
         MovieComment(id: UUID().uuidString, userId: "User3", movieId: "Movie1", text: "", audioComment: "https://example.com/audio1.m4a", type: "audio", username: "")
     ], movieId: "movieId", movieTitle: "movietitle")
-    .environmentObject(audioManager) // This line adds AudioManager to the environment
+    .environmentObject(audioManager)
 }

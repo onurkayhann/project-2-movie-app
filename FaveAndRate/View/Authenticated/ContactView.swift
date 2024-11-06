@@ -86,10 +86,8 @@ struct ContactView: View {
                 MapUserLocationButton()
                 MapPitchToggle()
             }
-            
             VStack {
                 Spacer()
-                
                 if let selectedOffice = selectedOffice {
                     
                     Button(action: {

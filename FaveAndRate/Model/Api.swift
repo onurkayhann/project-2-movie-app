@@ -35,7 +35,6 @@ class Api {
     }
 }
 
-//error handler
 enum APIErrors: Error {
     case invalidURL
     case invalidResponse
